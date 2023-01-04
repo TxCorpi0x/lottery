@@ -44769,6 +44769,13 @@ paths:
               params:
                 description: params holds all the parameters of this module.
                 type: object
+                properties:
+                  lottery_fee:
+                    type: string
+                    format: uint64
+                  minimal_bet:
+                    type: string
+                    format: uint64
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -74304,6 +74311,13 @@ definitions:
         type: string
   vjdmhd.lottery.lottery.Params:
     type: object
+    properties:
+      lottery_fee:
+        type: string
+        format: uint64
+      minimal_bet:
+        type: string
+        format: uint64
     description: Params defines the parameters for the module.
   vjdmhd.lottery.lottery.QueryAllLotteryResponse:
     type: object
@@ -74419,4 +74433,11 @@ definitions:
       params:
         description: params holds all the parameters of this module.
         type: object
+        properties:
+          lottery_fee:
+            type: string
+            format: uint64
+          minimal_bet:
+            type: string
+            format: uint64
     description: QueryParamsResponse is response type for the Query/Params RPC method.
