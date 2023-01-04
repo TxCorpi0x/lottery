@@ -24,7 +24,19 @@ var (
 )
 
 const (
-// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgCreateLottery = "op_weight_msg_lottery"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCreateLottery int = 100
+
+	opWeightMsgUpdateLottery = "op_weight_msg_lottery"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgUpdateLottery int = 100
+
+	opWeightMsgDeleteLottery = "op_weight_msg_lottery"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDeleteLottery int = 100
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -35,6 +47,16 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 	lotteryGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
+		LotteryList: []types.Lottery{
+			{
+				Creator: sample.AccAddress(),
+				ID:      "0",
+			},
+			{
+				Creator: sample.AccAddress(),
+				ID:      "1",
+			},
+		},
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&lotteryGenesis)
@@ -57,6 +79,13 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
+
+	var weightMsgCreateLottery int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateLottery, &weightMsgCreateLottery, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateLottery = defaultWeightMsgCreateLottery
+		},
+	)
 
 	// this line is used by starport scaffolding # simapp/module/operation
 
