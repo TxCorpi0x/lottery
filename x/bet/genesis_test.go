@@ -14,7 +14,15 @@ func TestGenesis(t *testing.T) {
 	genesisState := types.GenesisState{
 		Params: types.DefaultParams(),
 
-		BetList: []types.Bet{
+		ActiveBetList: []types.Bet{
+			{
+				Id: "0",
+			},
+			{
+				Id: "1",
+			},
+		},
+		SettledBetList: []types.Bet{
 			{
 				Id: "0",
 			},
@@ -33,6 +41,7 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(&genesisState)
 	nullify.Fill(got)
 
-	require.ElementsMatch(t, genesisState.BetList, got.BetList)
+	require.ElementsMatch(t, genesisState.ActiveBetList, got.ActiveBetList)
+	require.ElementsMatch(t, genesisState.SettledBetList, got.SettledBetList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

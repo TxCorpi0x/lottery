@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) BetAll(c context.Context, req *types.QueryAllBetRequest) (*types.QueryAllBetResponse, error) {
+func (k Keeper) ActiveBetAll(c context.Context, req *types.QueryAllBetRequest) (*types.QueryAllBetResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -20,7 +20,7 @@ func (k Keeper) BetAll(c context.Context, req *types.QueryAllBetRequest) (*types
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	betStore := prefix.NewStore(store, types.KeyPrefix(types.BetKeyPrefix))
+	betStore := prefix.NewStore(store, types.KeyPrefix(types.ActiveBetKeyPrefix))
 
 	pageRes, err := query.Paginate(betStore, req.Pagination, func(key []byte, value []byte) error {
 		var bet types.Bet
@@ -39,15 +39,14 @@ func (k Keeper) BetAll(c context.Context, req *types.QueryAllBetRequest) (*types
 	return &types.QueryAllBetResponse{Bet: bets, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Bet(c context.Context, req *types.QueryGetBetRequest) (*types.QueryGetBetResponse, error) {
+func (k Keeper) ActiveBet(c context.Context, req *types.QueryGetBetRequest) (*types.QueryGetBetResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetBet(
+	val, found := k.GetActiveBet(
 		ctx,
-		req.LotteryId,
 		req.Creator,
 	)
 	if !found {

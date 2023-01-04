@@ -36,8 +36,8 @@ function getStructure(template) {
 const getDefaultState = () => {
 	return {
 				Params: {},
-				Bet: {},
-				BetAll: {},
+				ActiveBet: {},
+				ActiveBetAll: {},
 				
 				_Structure: {
 						Bet: getStructure(Bet.fromPartial({})),
@@ -76,17 +76,17 @@ export default {
 					}
 			return state.Params[JSON.stringify(params)] ?? {}
 		},
-				getBet: (state) => (params = { params: {}}) => {
+				getActiveBet: (state) => (params = { params: {}}) => {
 					if (!(<any> params).query) {
 						(<any> params).query=null
 					}
-			return state.Bet[JSON.stringify(params)] ?? {}
+			return state.ActiveBet[JSON.stringify(params)] ?? {}
 		},
-				getBetAll: (state) => (params = { params: {}}) => {
+				getActiveBetAll: (state) => (params = { params: {}}) => {
 					if (!(<any> params).query) {
 						(<any> params).query=null
 					}
-			return state.BetAll[JSON.stringify(params)] ?? {}
+			return state.ActiveBetAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -149,18 +149,18 @@ export default {
 		 		
 		
 		
-		async QueryBet({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+		async QueryActiveBet({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
 			try {
 				const key = params ?? {};
 				const client = initClient(rootGetters);
-				let value= (await client.VjdmhdLotteryBet.query.queryBet( key.lottery_id,  key.creator)).data
+				let value= (await client.VjdmhdLotteryBet.query.queryActiveBet( key.creator)).data
 				
 					
-				commit('QUERY', { query: 'Bet', key: { params: {...key}, query}, value })
-				if (subscribe) commit('SUBSCRIBE', { action: 'QueryBet', payload: { options: { all }, params: {...key},query }})
-				return getters['getBet']( { params: {...key}, query}) ?? {}
+				commit('QUERY', { query: 'ActiveBet', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryActiveBet', payload: { options: { all }, params: {...key},query }})
+				return getters['getActiveBet']( { params: {...key}, query}) ?? {}
 			} catch (e) {
-				throw new Error('QueryClient:QueryBet API Node Unavailable. Could not perform query: ' + e.message)
+				throw new Error('QueryClient:QueryActiveBet API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
@@ -171,22 +171,22 @@ export default {
 		 		
 		
 		
-		async QueryBetAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+		async QueryActiveBetAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
 			try {
 				const key = params ?? {};
 				const client = initClient(rootGetters);
-				let value= (await client.VjdmhdLotteryBet.query.queryBetAll(query ?? undefined)).data
+				let value= (await client.VjdmhdLotteryBet.query.queryActiveBetAll(query ?? undefined)).data
 				
 					
 				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
-					let next_values=(await client.VjdmhdLotteryBet.query.queryBetAll({...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					let next_values=(await client.VjdmhdLotteryBet.query.queryActiveBetAll({...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
 					value = mergeResults(value, next_values);
 				}
-				commit('QUERY', { query: 'BetAll', key: { params: {...key}, query}, value })
-				if (subscribe) commit('SUBSCRIBE', { action: 'QueryBetAll', payload: { options: { all }, params: {...key},query }})
-				return getters['getBetAll']( { params: {...key}, query}) ?? {}
+				commit('QUERY', { query: 'ActiveBetAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryActiveBetAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getActiveBetAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
-				throw new Error('QueryClient:QueryBetAll API Node Unavailable. Could not perform query: ' + e.message)
+				throw new Error('QueryClient:QueryActiveBetAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

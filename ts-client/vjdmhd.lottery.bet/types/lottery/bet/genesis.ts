@@ -7,15 +7,14 @@ export const protobufPackage = "vjdmhd.lottery.bet";
 
 /** GenesisState defines the bet module's genesis state. */
 export interface GenesisState {
-  params:
-    | Params
-    | undefined;
+  params: Params | undefined;
+  activeBetList: Bet[];
   /** this line is used by starport scaffolding # genesis/proto/state */
-  betList: Bet[];
+  settledBetList: Bet[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, betList: [] };
+  return { params: undefined, activeBetList: [], settledBetList: [] };
 }
 
 export const GenesisState = {
@@ -23,8 +22,11 @@ export const GenesisState = {
     if (message.params !== undefined) {
       Params.encode(message.params, writer.uint32(10).fork()).ldelim();
     }
-    for (const v of message.betList) {
+    for (const v of message.activeBetList) {
       Bet.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    for (const v of message.settledBetList) {
+      Bet.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -40,7 +42,10 @@ export const GenesisState = {
           message.params = Params.decode(reader, reader.uint32());
           break;
         case 2:
-          message.betList.push(Bet.decode(reader, reader.uint32()));
+          message.activeBetList.push(Bet.decode(reader, reader.uint32()));
+          break;
+        case 3:
+          message.settledBetList.push(Bet.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -53,17 +58,25 @@ export const GenesisState = {
   fromJSON(object: any): GenesisState {
     return {
       params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
-      betList: Array.isArray(object?.betList) ? object.betList.map((e: any) => Bet.fromJSON(e)) : [],
+      activeBetList: Array.isArray(object?.activeBetList) ? object.activeBetList.map((e: any) => Bet.fromJSON(e)) : [],
+      settledBetList: Array.isArray(object?.settledBetList)
+        ? object.settledBetList.map((e: any) => Bet.fromJSON(e))
+        : [],
     };
   },
 
   toJSON(message: GenesisState): unknown {
     const obj: any = {};
     message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
-    if (message.betList) {
-      obj.betList = message.betList.map((e) => e ? Bet.toJSON(e) : undefined);
+    if (message.activeBetList) {
+      obj.activeBetList = message.activeBetList.map((e) => e ? Bet.toJSON(e) : undefined);
     } else {
-      obj.betList = [];
+      obj.activeBetList = [];
+    }
+    if (message.settledBetList) {
+      obj.settledBetList = message.settledBetList.map((e) => e ? Bet.toJSON(e) : undefined);
+    } else {
+      obj.settledBetList = [];
     }
     return obj;
   },
@@ -73,7 +86,8 @@ export const GenesisState = {
     message.params = (object.params !== undefined && object.params !== null)
       ? Params.fromPartial(object.params)
       : undefined;
-    message.betList = object.betList?.map((e) => Bet.fromPartial(e)) || [];
+    message.activeBetList = object.activeBetList?.map((e) => Bet.fromPartial(e)) || [];
+    message.settledBetList = object.settledBetList?.map((e) => Bet.fromPartial(e)) || [];
     return message;
   },
 };

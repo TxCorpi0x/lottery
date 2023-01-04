@@ -32,7 +32,7 @@ func SimulateMsgCreateBet(
 		}
 
 		// TODO: get lottery id from lottery module
-		_, found := k.GetBet(ctx, "TODO", msg.Creator)
+		_, found := k.GetActiveBet(ctx, msg.Creator)
 		if found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Bet already exist"), nil, nil
 		}

@@ -47,7 +47,17 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 	betGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
-		BetList: []types.Bet{
+		ActiveBetList: []types.Bet{
+			{
+				Creator: sample.AccAddress(),
+				Id:      "0",
+			},
+			{
+				Creator: sample.AccAddress(),
+				Id:      "1",
+			},
+		},
+		SettledBetList: []types.Bet{
 			{
 				Creator: sample.AccAddress(),
 				Id:      "0",

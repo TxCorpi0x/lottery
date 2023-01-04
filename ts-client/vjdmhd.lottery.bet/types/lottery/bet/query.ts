@@ -17,7 +17,6 @@ export interface QueryParamsResponse {
 }
 
 export interface QueryGetBetRequest {
-  lotteryId: string;
   creator: string;
 }
 
@@ -123,16 +122,13 @@ export const QueryParamsResponse = {
 };
 
 function createBaseQueryGetBetRequest(): QueryGetBetRequest {
-  return { lotteryId: "", creator: "" };
+  return { creator: "" };
 }
 
 export const QueryGetBetRequest = {
   encode(message: QueryGetBetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.lotteryId !== "") {
-      writer.uint32(10).string(message.lotteryId);
-    }
     if (message.creator !== "") {
-      writer.uint32(18).string(message.creator);
+      writer.uint32(10).string(message.creator);
     }
     return writer;
   },
@@ -145,9 +141,6 @@ export const QueryGetBetRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.lotteryId = reader.string();
-          break;
-        case 2:
           message.creator = reader.string();
           break;
         default:
@@ -159,22 +152,17 @@ export const QueryGetBetRequest = {
   },
 
   fromJSON(object: any): QueryGetBetRequest {
-    return {
-      lotteryId: isSet(object.lotteryId) ? String(object.lotteryId) : "",
-      creator: isSet(object.creator) ? String(object.creator) : "",
-    };
+    return { creator: isSet(object.creator) ? String(object.creator) : "" };
   },
 
   toJSON(message: QueryGetBetRequest): unknown {
     const obj: any = {};
-    message.lotteryId !== undefined && (obj.lotteryId = message.lotteryId);
     message.creator !== undefined && (obj.creator = message.creator);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<QueryGetBetRequest>, I>>(object: I): QueryGetBetRequest {
     const message = createBaseQueryGetBetRequest();
-    message.lotteryId = object.lotteryId ?? "";
     message.creator = object.creator ?? "";
     return message;
   },
@@ -346,10 +334,10 @@ export const QueryAllBetResponse = {
 export interface Query {
   /** Parameters queries the parameters of the module. */
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
-  /** Queries a Bet by index. */
-  Bet(request: QueryGetBetRequest): Promise<QueryGetBetResponse>;
-  /** Queries a list of Bet items. */
-  BetAll(request: QueryAllBetRequest): Promise<QueryAllBetResponse>;
+  /** Queries a active Bet by creator. */
+  ActiveBet(request: QueryGetBetRequest): Promise<QueryGetBetResponse>;
+  /** Queries a list of active Bet items. */
+  ActiveBetAll(request: QueryAllBetRequest): Promise<QueryAllBetResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -357,8 +345,8 @@ export class QueryClientImpl implements Query {
   constructor(rpc: Rpc) {
     this.rpc = rpc;
     this.Params = this.Params.bind(this);
-    this.Bet = this.Bet.bind(this);
-    this.BetAll = this.BetAll.bind(this);
+    this.ActiveBet = this.ActiveBet.bind(this);
+    this.ActiveBetAll = this.ActiveBetAll.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -366,15 +354,15 @@ export class QueryClientImpl implements Query {
     return promise.then((data) => QueryParamsResponse.decode(new _m0.Reader(data)));
   }
 
-  Bet(request: QueryGetBetRequest): Promise<QueryGetBetResponse> {
+  ActiveBet(request: QueryGetBetRequest): Promise<QueryGetBetResponse> {
     const data = QueryGetBetRequest.encode(request).finish();
-    const promise = this.rpc.request("vjdmhd.lottery.bet.Query", "Bet", data);
+    const promise = this.rpc.request("vjdmhd.lottery.bet.Query", "ActiveBet", data);
     return promise.then((data) => QueryGetBetResponse.decode(new _m0.Reader(data)));
   }
 
-  BetAll(request: QueryAllBetRequest): Promise<QueryAllBetResponse> {
+  ActiveBetAll(request: QueryAllBetRequest): Promise<QueryAllBetResponse> {
     const data = QueryAllBetRequest.encode(request).finish();
-    const promise = this.rpc.request("vjdmhd.lottery.bet.Query", "BetAll", data);
+    const promise = this.rpc.request("vjdmhd.lottery.bet.Query", "ActiveBetAll", data);
     return promise.then((data) => QueryAllBetResponse.decode(new _m0.Reader(data)));
   }
 }

@@ -13,7 +13,7 @@ export interface BetBet {
   id?: string;
   lottery_id?: string;
 
-  /** @format uint64 */
+  /** @format int64 */
   height?: string;
 
   /** @format uint64 */
@@ -267,11 +267,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
-   * @name QueryBetAll
-   * @summary Queries a list of Bet items.
-   * @request GET:/vjdmhd/lottery/bet/bet
+   * @name QueryActiveBetAll
+   * @summary Queries a list of active Bet items.
+   * @request GET:/vjdmhd/lottery/bet/activebet
    */
-  queryBetAll = (
+  queryActiveBetAll = (
     query?: {
       "pagination.key"?: string;
       "pagination.offset"?: string;
@@ -282,7 +282,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<BetQueryAllBetResponse, RpcStatus>({
-      path: `/vjdmhd/lottery/bet/bet`,
+      path: `/vjdmhd/lottery/bet/activebet`,
       method: "GET",
       query: query,
       format: "json",
@@ -293,13 +293,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
-   * @name QueryBet
-   * @summary Queries a Bet by index.
-   * @request GET:/vjdmhd/lottery/bet/bet/{lottery_id}/{creator}
+   * @name QueryActiveBet
+   * @summary Queries a active Bet by creator.
+   * @request GET:/vjdmhd/lottery/bet/activebet/{creator}
    */
-  queryBet = (lotteryId: string, creator: string, params: RequestParams = {}) =>
+  queryActiveBet = (creator: string, params: RequestParams = {}) =>
     this.request<BetQueryGetBetResponse, RpcStatus>({
-      path: `/vjdmhd/lottery/bet/bet/${lotteryId}/${creator}`,
+      path: `/vjdmhd/lottery/bet/activebet/${creator}`,
       method: "GET",
       format: "json",
       ...params,
