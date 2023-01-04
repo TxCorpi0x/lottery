@@ -7,12 +7,12 @@ import "cosmos/base/v1beta1/coin.proto";
 option go_package = "github.com/vjdmhd/lottery/x/lottery/types";
 
 message Lottery {
-  string id = 1 [(gogoproto.customname) = "ID" ,(gogoproto.jsontag) = "id", json_name = "id"]; 
+  string id = 1; 
   uint64 start_block = 2; 
   uint64 end_block = 3; 
   uint64 bet_count = 4; 
   uint64 tx_count = 5; 
-  uint64 winner_id = 6 [(gogoproto.customname) = "WinnerID" ,(gogoproto.jsontag) = "winner_id", json_name = "winner_id"]; 
+  uint64 winner_id = 6; 
   cosmos.base.v1beta1.Coin payout = 7 [(gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.nullable) = false]; 
   string creator = 8;
 }

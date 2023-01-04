@@ -1,9 +1,11 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT MODIFY.
 
+import VjdmhdLotteryBet from './vjdmhd.lottery.bet'
 import VjdmhdLotteryLottery from './vjdmhd.lottery.lottery'
 
 
 export default { 
+  VjdmhdLotteryBet: load(VjdmhdLotteryBet, 'vjdmhd.lottery.bet'),
   VjdmhdLotteryLottery: load(VjdmhdLotteryLottery, 'vjdmhd.lottery.lottery'),
   
 }

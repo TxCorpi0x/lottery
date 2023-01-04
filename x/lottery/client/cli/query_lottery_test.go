@@ -29,7 +29,7 @@ func networkWithLotteryObjects(t *testing.T, n int) (*network.Network, []types.L
 
 	for i := 0; i < n; i++ {
 		lottery := types.Lottery{
-			ID: strconv.Itoa(i),
+			Id: strconv.Itoa(i),
 		}
 		nullify.Fill(&lottery)
 		state.LotteryList = append(state.LotteryList, lottery)
@@ -57,7 +57,7 @@ func TestShowLottery(t *testing.T) {
 	}{
 		{
 			desc:    "found",
-			idIndex: objs[0].ID,
+			idIndex: objs[0].Id,
 
 			args: common,
 			obj:  objs[0],

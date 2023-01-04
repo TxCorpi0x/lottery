@@ -50,11 +50,11 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		LotteryList: []types.Lottery{
 			{
 				Creator: sample.AccAddress(),
-				ID:      "0",
+				Id:      "0",
 			},
 			{
 				Creator: sample.AccAddress(),
-				ID:      "1",
+				Id:      "1",
 			},
 		},
 		// this line is used by starport scaffolding # simapp/module/genesisState

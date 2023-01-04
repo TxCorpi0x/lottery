@@ -18,7 +18,7 @@ var _ = strconv.IntSize
 func createNLottery(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Lottery {
 	items := make([]types.Lottery, n)
 	for i := range items {
-		items[i].ID = strconv.Itoa(i)
+		items[i].Id = strconv.Itoa(i)
 
 		keeper.SetLottery(ctx, items[i])
 	}
@@ -30,7 +30,7 @@ func TestLotteryGet(t *testing.T) {
 	items := createNLottery(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetLottery(ctx,
-			item.ID,
+			item.Id,
 		)
 		require.True(t, found)
 		require.Equal(t,
@@ -44,10 +44,10 @@ func TestLotteryRemove(t *testing.T) {
 	items := createNLottery(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveLottery(ctx,
-			item.ID,
+			item.Id,
 		)
 		_, found := keeper.GetLottery(ctx,
-			item.ID,
+			item.Id,
 		)
 		require.False(t, found)
 	}

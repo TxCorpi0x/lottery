@@ -11,7 +11,7 @@ func (k Keeper) SetLottery(ctx sdk.Context, lottery types.Lottery) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LotteryKeyPrefix))
 	b := k.cdc.MustMarshal(&lottery)
 	store.Set(types.LotteryKey(
-		lottery.ID,
+		lottery.Id,
 	), b)
 }
 

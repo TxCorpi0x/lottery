@@ -95,7 +95,7 @@ export const Lottery = {
       endBlock: isSet(object.endBlock) ? Number(object.endBlock) : 0,
       betCount: isSet(object.betCount) ? Number(object.betCount) : 0,
       txCount: isSet(object.txCount) ? Number(object.txCount) : 0,
-      winnerId: isSet(object.winner_id) ? Number(object.winner_id) : 0,
+      winnerId: isSet(object.winnerId) ? Number(object.winnerId) : 0,
       payout: isSet(object.payout) ? Coin.fromJSON(object.payout) : undefined,
       creator: isSet(object.creator) ? String(object.creator) : "",
     };
@@ -108,7 +108,7 @@ export const Lottery = {
     message.endBlock !== undefined && (obj.endBlock = Math.round(message.endBlock));
     message.betCount !== undefined && (obj.betCount = Math.round(message.betCount));
     message.txCount !== undefined && (obj.txCount = Math.round(message.txCount));
-    message.winnerId !== undefined && (obj.winner_id = Math.round(message.winnerId));
+    message.winnerId !== undefined && (obj.winnerId = Math.round(message.winnerId));
     message.payout !== undefined && (obj.payout = message.payout ? Coin.toJSON(message.payout) : undefined);
     message.creator !== undefined && (obj.creator = message.creator);
     return obj;

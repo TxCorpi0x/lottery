@@ -23,7 +23,7 @@ func (gs GenesisState) Validate() error {
 	lotteryIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.LotteryList {
-		index := string(LotteryKey(elem.ID))
+		index := string(LotteryKey(elem.Id))
 		if _, ok := lotteryIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for lottery")
 		}

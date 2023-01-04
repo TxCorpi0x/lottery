@@ -104,6 +104,9 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
+	betmodule "github.com/vjdmhd/lottery/x/bet"
+	betmodulekeeper "github.com/vjdmhd/lottery/x/bet/keeper"
+	betmoduletypes "github.com/vjdmhd/lottery/x/bet/types"
 	lotterymodule "github.com/vjdmhd/lottery/x/lottery"
 	lotterymodulekeeper "github.com/vjdmhd/lottery/x/lottery/keeper"
 	lotterymoduletypes "github.com/vjdmhd/lottery/x/lottery/types"
@@ -166,6 +169,7 @@ var (
 		ica.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		lotterymodule.AppModuleBasic{},
+		betmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -240,6 +244,8 @@ type App struct {
 	ScopedICAHostKeeper  capabilitykeeper.ScopedKeeper
 
 	LotteryKeeper lotterymodulekeeper.Keeper
+
+	BetKeeper betmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -285,6 +291,7 @@ func New(
 		ibctransfertypes.StoreKey, icahosttypes.StoreKey, capabilitytypes.StoreKey, group.StoreKey,
 		icacontrollertypes.StoreKey,
 		lotterymoduletypes.StoreKey,
+		betmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -510,6 +517,14 @@ func New(
 	)
 	lotteryModule := lotterymodule.NewAppModule(appCodec, app.LotteryKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.BetKeeper = *betmodulekeeper.NewKeeper(
+		appCodec,
+		keys[betmoduletypes.StoreKey],
+		keys[betmoduletypes.MemStoreKey],
+		app.GetSubspace(betmoduletypes.ModuleName),
+	)
+	betModule := betmodule.NewAppModule(appCodec, app.BetKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Sealing prevents other modules from creating scoped sub-keepers
@@ -556,6 +571,7 @@ func New(
 		transferModule,
 		icaModule,
 		lotteryModule,
+		betModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -586,6 +602,7 @@ func New(
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
 		lotterymoduletypes.ModuleName,
+		betmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -611,6 +628,7 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		lotterymoduletypes.ModuleName,
+		betmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -641,6 +659,7 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		lotterymoduletypes.ModuleName,
+		betmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -671,6 +690,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
 		lotteryModule,
+		betModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -870,6 +890,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(lotterymoduletypes.ModuleName)
+	paramsKeeper.Subspace(betmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

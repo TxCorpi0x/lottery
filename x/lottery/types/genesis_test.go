@@ -24,10 +24,10 @@ func TestGenesisState_Validate(t *testing.T) {
 
 				LotteryList: []types.Lottery{
 					{
-						ID: "0",
+						Id: "0",
 					},
 					{
-						ID: "1",
+						Id: "1",
 					},
 				},
 				// this line is used by starport scaffolding # types/genesis/validField
@@ -39,10 +39,10 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				LotteryList: []types.Lottery{
 					{
-						ID: "0",
+						Id: "0",
 					},
 					{
-						ID: "0",
+						Id: "0",
 					},
 				},
 			},

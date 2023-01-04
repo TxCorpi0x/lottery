@@ -16,10 +16,10 @@ func TestGenesis(t *testing.T) {
 
 		LotteryList: []types.Lottery{
 			{
-				ID: "0",
+				Id: "0",
 			},
 			{
-				ID: "1",
+				Id: "1",
 			},
 		},
 		// this line is used by starport scaffolding # genesis/test/state

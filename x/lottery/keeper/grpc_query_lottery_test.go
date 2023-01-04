@@ -31,14 +31,14 @@ func TestLotteryQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryGetLotteryRequest{
-				Index: msgs[0].ID,
+				Index: msgs[0].Id,
 			},
 			response: &types.QueryGetLotteryResponse{Lottery: msgs[0]},
 		},
 		{
 			desc: "Second",
 			request: &types.QueryGetLotteryRequest{
-				Index: msgs[1].ID,
+				Index: msgs[1].Id,
 			},
 			response: &types.QueryGetLotteryResponse{Lottery: msgs[1]},
 		},
