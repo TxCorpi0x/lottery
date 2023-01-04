@@ -9,4 +9,6 @@ option go_package = "github.com/vjdmhd/lottery/x/lottery/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
   
+  uint64 lottery_fee = 1;
+  uint64 minimal_bet = 2;
 }

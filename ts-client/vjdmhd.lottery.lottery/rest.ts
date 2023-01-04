@@ -40,7 +40,13 @@ export interface LotteryLottery {
 /**
  * Params defines the parameters for the module.
  */
-export type LotteryParams = object;
+export interface LotteryParams {
+  /** @format uint64 */
+  lottery_fee?: string;
+
+  /** @format uint64 */
+  minimal_bet?: string;
+}
 
 export interface LotteryQueryAllLotteryResponse {
   lottery?: LotteryLottery[];
