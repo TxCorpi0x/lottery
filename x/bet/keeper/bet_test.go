@@ -15,24 +15,28 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNBet(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Bet {
+func createNActiveBet(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Bet {
 	items := make([]types.Bet, n)
 	for i := range items {
-		items[i].Id = strconv.Itoa(i)
+		items[i].Amount = uint64(i)
 
-		keeper.SetBet(ctx, items[i])
+		keeper.SetActiveBet(ctx, items[i])
 	}
+
 	return items
 }
 
-func TestBetGet(t *testing.T) {
+func TestActiveBetGet(t *testing.T) {
 	keeper, ctx := keepertest.BetKeeper(t)
-	items := createNBet(keeper, ctx, 10)
+	items := createNActiveBet(keeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetBet(ctx,
-			"TODO", // TODO: get current lottery id
-			item.Id,
+		rst, found := keeper.GetActiveBet(ctx,
+			item.Creator,
 		)
+		// this means after modifying the active bet
+		// only s single item should be updated
+		// and value should be largest number in the loop
+		item.Amount = 9
 		require.True(t, found)
 		require.Equal(t,
 			nullify.Fill(&item),
@@ -41,11 +45,15 @@ func TestBetGet(t *testing.T) {
 	}
 }
 
-func TestBetGetAll(t *testing.T) {
+func TestActiveBetGetAll(t *testing.T) {
 	keeper, ctx := keepertest.BetKeeper(t)
-	items := createNBet(keeper, ctx, 10)
+	items := createNActiveBet(keeper, ctx, 10)
+	// this means after modifying the active bet
+	// only s single item should be updated
+	// and value should be largest number in the loop
+	items[0].Amount = 9
 	require.ElementsMatch(t,
-		nullify.Fill(items),
-		nullify.Fill(keeper.GetAllBet(ctx)),
+		nullify.Fill([]types.Bet{items[0]}),
+		nullify.Fill(keeper.GetAllActiveBet(ctx)),
 	)
 }

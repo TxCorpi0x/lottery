@@ -16,14 +16,14 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/vjdmhd/lottery/bet/params";
   }
-  // Queries a Bet by index.
-	rpc Bet(QueryGetBetRequest) returns (QueryGetBetResponse) {
-		option (google.api.http).get = "/vjdmhd/lottery/bet/bet/{lottery_id}/{creator}";
+  // Queries a active Bet by creator.
+	rpc ActiveBet(QueryGetBetRequest) returns (QueryGetBetResponse) {
+		option (google.api.http).get = "/vjdmhd/lottery/bet/activebet/{creator}";
 	}
 
-	// Queries a list of Bet items.
-	rpc BetAll(QueryAllBetRequest) returns (QueryAllBetResponse) {
-		option (google.api.http).get = "/vjdmhd/lottery/bet/bet";
+	// Queries a list of active Bet items.
+	rpc ActiveBetAll(QueryAllBetRequest) returns (QueryAllBetResponse) {
+		option (google.api.http).get = "/vjdmhd/lottery/bet/activebet";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -39,8 +39,7 @@ message QueryParamsResponse {
 }
 
 message QueryGetBetRequest {
-	  string lottery_id = 1;
-	  string creator = 2;
+	  string creator = 1;
 
 }
 

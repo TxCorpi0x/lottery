@@ -25,7 +25,7 @@ export const Bet = {
       writer.uint32(18).string(message.lotteryId);
     }
     if (message.height !== 0) {
-      writer.uint32(24).uint64(message.height);
+      writer.uint32(24).int64(message.height);
     }
     if (message.amount !== 0) {
       writer.uint32(32).uint64(message.amount);
@@ -50,7 +50,7 @@ export const Bet = {
           message.lotteryId = reader.string();
           break;
         case 3:
-          message.height = longToNumber(reader.uint64() as Long);
+          message.height = longToNumber(reader.int64() as Long);
           break;
         case 4:
           message.amount = longToNumber(reader.uint64() as Long);

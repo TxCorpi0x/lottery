@@ -8,10 +8,15 @@ import (
 
 // InitGenesis initializes the module's state from a provided genesis state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
-	// Set all the bet
-	for _, elem := range genState.BetList {
-		k.SetBet(ctx, elem)
+	// Set all the active bet
+	for _, elem := range genState.ActiveBetList {
+		k.SetActiveBet(ctx, elem)
 	}
+	// Set all the settled bet
+	for _, elem := range genState.SettledBetList {
+		k.SetSettledBet(ctx, elem)
+	}
+
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -21,7 +26,8 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 	genesis.Params = k.GetParams(ctx)
 
-	genesis.BetList = k.GetAllBet(ctx)
+	genesis.ActiveBetList = k.GetAllActiveBet(ctx)
+	genesis.SettledBetList = k.GetAllSettledBet(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

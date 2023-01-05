@@ -21,7 +21,9 @@ var _ = strconv.IntSize
 func TestBetQuerySingle(t *testing.T) {
 	keeper, ctx := keepertest.BetKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNBet(keeper, ctx, 2)
+	msgs := createNActiveBet(keeper, ctx, 2)
+	msgs[0].Amount = 1
+	msgs[1].Amount = 1
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetBetRequest
@@ -31,24 +33,21 @@ func TestBetQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryGetBetRequest{
-				LotteryId: msgs[0].LotteryId,
-				Creator:   msgs[0].Creator,
+				Creator: msgs[0].Creator,
 			},
 			response: &types.QueryGetBetResponse{Bet: msgs[0]},
 		},
 		{
 			desc: "Second",
 			request: &types.QueryGetBetRequest{
-				LotteryId: msgs[1].LotteryId,
-				Creator:   msgs[1].Creator,
+				Creator: msgs[1].Creator,
 			},
 			response: &types.QueryGetBetResponse{Bet: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetBetRequest{
-				LotteryId: strconv.Itoa(100000),
-				Creator:   "notvalid",
+				Creator: "notvalid",
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
@@ -58,7 +57,7 @@ func TestBetQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.Bet(wctx, tc.request)
+			response, err := keeper.ActiveBet(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -75,7 +74,7 @@ func TestBetQuerySingle(t *testing.T) {
 func TestBetQueryPaginated(t *testing.T) {
 	keeper, ctx := keepertest.BetKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNBet(keeper, ctx, 5)
+	msgs := createNActiveBet(keeper, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllBetRequest {
 		return &types.QueryAllBetRequest{
@@ -90,7 +89,7 @@ func TestBetQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.BetAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := keeper.ActiveBetAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Bet), step)
 			require.Subset(t,
@@ -103,7 +102,7 @@ func TestBetQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.BetAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := keeper.ActiveBetAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Bet), step)
 			require.Subset(t,
@@ -114,16 +113,17 @@ func TestBetQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.BetAll(wctx, request(nil, 0, 0, true))
+		resp, err := keeper.ActiveBetAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
-		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+		require.Equal(t, 1, int(resp.Pagination.Total))
+		msgs[0].Amount = 4
 		require.ElementsMatch(t,
-			nullify.Fill(msgs),
+			nullify.Fill([]types.Bet{msgs[0]}),
 			nullify.Fill(resp.Bet),
 		)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.BetAll(wctx, nil)
+		_, err := keeper.ActiveBetAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

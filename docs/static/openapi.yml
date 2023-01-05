@@ -44308,10 +44308,10 @@ paths:
           format: uint64
       tags:
         - Query
-  /vjdmhd/lottery/bet/bet:
+  /vjdmhd/lottery/bet/activebet:
     get:
-      summary: Queries a list of Bet items.
-      operationId: VjdmhdLotteryBetBetAll
+      summary: Queries a list of active Bet items.
+      operationId: VjdmhdLotteryBetActiveBetAll
       responses:
         '200':
           description: A successful response.
@@ -44329,7 +44329,7 @@ paths:
                       type: string
                     height:
                       type: string
-                      format: uint64
+                      format: int64
                     amount:
                       type: string
                       format: uint64
@@ -44440,10 +44440,10 @@ paths:
           type: boolean
       tags:
         - Query
-  /vjdmhd/lottery/bet/bet/{lottery_id}/{creator}:
+  /vjdmhd/lottery/bet/activebet/{creator}:
     get:
-      summary: Queries a Bet by index.
-      operationId: VjdmhdLotteryBetBet
+      summary: Queries a active Bet by creator.
+      operationId: VjdmhdLotteryBetActiveBet
       responses:
         '200':
           description: A successful response.
@@ -44459,7 +44459,7 @@ paths:
                     type: string
                   height:
                     type: string
-                    format: uint64
+                    format: int64
                   amount:
                     type: string
                     format: uint64
@@ -44484,10 +44484,6 @@ paths:
                       type: string
                   additionalProperties: {}
       parameters:
-        - name: lottery_id
-          in: path
-          required: true
-          type: string
         - name: creator
           in: path
           required: true
@@ -74193,7 +74189,7 @@ definitions:
         type: string
       height:
         type: string
-        format: uint64
+        format: int64
       amount:
         type: string
         format: uint64
@@ -74218,7 +74214,7 @@ definitions:
               type: string
             height:
               type: string
-              format: uint64
+              format: int64
             amount:
               type: string
               format: uint64
@@ -74262,7 +74258,7 @@ definitions:
             type: string
           height:
             type: string
-            format: uint64
+            format: int64
           amount:
             type: string
             format: uint64

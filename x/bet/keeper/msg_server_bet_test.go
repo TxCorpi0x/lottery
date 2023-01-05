@@ -27,8 +27,7 @@ func TestBetMsgServerCreate(t *testing.T) {
 		}
 		_, err := srv.CreateBet(wctx, expected)
 		require.NoError(t, err)
-		rst, found := k.GetBet(ctx,
-			"TODO", // TODO: populate lottery id
+		rst, found := k.GetActiveBet(ctx,
 			expected.Creator,
 		)
 		require.True(t, found)

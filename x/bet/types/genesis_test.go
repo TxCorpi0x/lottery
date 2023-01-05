@@ -22,12 +22,24 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
 
-				BetList: []types.Bet{
+				ActiveBetList: []types.Bet{
 					{
-						Id: "0",
+						Id:      "0",
+						Creator: "creator1",
 					},
 					{
-						Id: "1",
+						Id:      "1",
+						Creator: "creator2",
+					},
+				},
+				SettledBetList: []types.Bet{
+					{
+						Id:      "0",
+						Creator: "creator1",
+					},
+					{
+						Id:      "1",
+						Creator: "creator2",
 					},
 				},
 				// this line is used by starport scaffolding # types/genesis/validField
@@ -37,12 +49,22 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated bet",
 			genState: &types.GenesisState{
-				BetList: []types.Bet{
+				ActiveBetList: []types.Bet{
+					{
+						Id:      "0",
+						Creator: "creator1",
+					},
+					{
+						Id:      "1",
+						Creator: "creator1",
+					},
+				},
+				SettledBetList: []types.Bet{
 					{
 						Id: "0",
 					},
 					{
-						Id: "0",
+						Id: "1",
 					},
 				},
 			},

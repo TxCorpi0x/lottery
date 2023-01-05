@@ -21,7 +21,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) {
+func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet, []types.Bet) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
@@ -29,19 +29,21 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 
 	for i := 0; i < n; i++ {
 		bet := types.Bet{
-			Index: strconv.Itoa(i),
+			Id:      strconv.Itoa(i),
+			Creator: "known",
 		}
 		nullify.Fill(&bet)
-		state.BetList = append(state.BetList, bet)
+		state.ActiveBetList = append(state.ActiveBetList, bet)
+		state.SettledBetList = append(state.SettledBetList, bet)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.BetList
+	return network.New(t, cfg), state.ActiveBetList, state.SettledBetList
 }
 
 func TestShowBet(t *testing.T) {
-	net, objs := networkWithBetObjects(t, 2)
+	net, activeObjs, _ := networkWithBetObjects(t, 2)
 
 	ctx := net.Validators[0].ClientCtx
 	common := []string{
@@ -49,7 +51,7 @@ func TestShowBet(t *testing.T) {
 	}
 	for _, tc := range []struct {
 		desc    string
-		idIndex string
+		creator string
 
 		args []string
 		err  error
@@ -57,14 +59,14 @@ func TestShowBet(t *testing.T) {
 	}{
 		{
 			desc:    "found",
-			idIndex: objs[0].Index,
+			creator: activeObjs[0].Creator,
 
 			args: common,
-			obj:  objs[0],
+			obj:  activeObjs[1],
 		},
 		{
 			desc:    "not found",
-			idIndex: strconv.Itoa(100000),
+			creator: "unknown",
 
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),
@@ -72,10 +74,10 @@ func TestShowBet(t *testing.T) {
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
-				tc.idIndex,
+				tc.creator,
 			}
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowBet(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowActiveBet(), args)
 			if tc.err != nil {
 				stat, ok := status.FromError(tc.err)
 				require.True(t, ok)
@@ -95,7 +97,7 @@ func TestShowBet(t *testing.T) {
 }
 
 func TestListBet(t *testing.T) {
-	net, objs := networkWithBetObjects(t, 5)
+	net, activeObjs, _ := networkWithBetObjects(t, 5)
 
 	ctx := net.Validators[0].ClientCtx
 	request := func(next []byte, offset, limit uint64, total bool) []string {
@@ -115,15 +117,15 @@ func TestListBet(t *testing.T) {
 	}
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
-		for i := 0; i < len(objs); i += step {
+		for i := 0; i < len(activeObjs); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListBet(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListActiveBet(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllBetResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.Bet), step)
 			require.Subset(t,
-				nullify.Fill(objs),
+				nullify.Fill(activeObjs),
 				nullify.Fill(resp.Bet),
 			)
 		}
@@ -131,30 +133,30 @@ func TestListBet(t *testing.T) {
 	t.Run("ByKey", func(t *testing.T) {
 		step := 2
 		var next []byte
-		for i := 0; i < len(objs); i += step {
+		for i := 0; i < len(activeObjs); i += step {
 			args := request(next, 0, uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListBet(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListActiveBet(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllBetResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.Bet), step)
 			require.Subset(t,
-				nullify.Fill(objs),
+				nullify.Fill(activeObjs),
 				nullify.Fill(resp.Bet),
 			)
 			next = resp.Pagination.NextKey
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		args := request(nil, 0, uint64(len(objs)), true)
-		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListBet(), args)
+		args := request(nil, 0, uint64(len(activeObjs)), true)
+		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListActiveBet(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllBetResponse
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
-		require.Equal(t, len(objs), int(resp.Pagination.Total))
+		require.Equal(t, 1, int(resp.Pagination.Total))
 		require.ElementsMatch(t,
-			nullify.Fill(objs),
+			nullify.Fill([]types.Bet{activeObjs[4]}),
 			nullify.Fill(resp.Bet),
 		)
 	})
