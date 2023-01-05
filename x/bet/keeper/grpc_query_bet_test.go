@@ -22,6 +22,8 @@ func TestBetQuerySingle(t *testing.T) {
 	keeper, ctx := keepertest.BetKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNActiveBet(keeper, ctx, 2)
+	msgs[0].Amount = 1
+	msgs[1].Amount = 1
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetBetRequest
@@ -113,9 +115,10 @@ func TestBetQueryPaginated(t *testing.T) {
 	t.Run("Total", func(t *testing.T) {
 		resp, err := keeper.ActiveBetAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
-		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+		require.Equal(t, 1, int(resp.Pagination.Total))
+		msgs[0].Amount = 4
 		require.ElementsMatch(t,
-			nullify.Fill(msgs),
+			nullify.Fill([]types.Bet{msgs[0]}),
 			nullify.Fill(resp.Bet),
 		)
 	})

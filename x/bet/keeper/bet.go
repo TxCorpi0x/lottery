@@ -6,6 +6,26 @@ import (
 	"github.com/vjdmhd/lottery/x/bet/types"
 )
 
+// SetBetCount sets total bets statistics
+func (k Keeper) SetBetStats(ctx sdk.Context, betstats types.BetStats) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.BetStatusKey))
+	b := k.cdc.MustMarshal(&betstats)
+	store.Set(types.KeyPrefix("0"), b)
+}
+
+// GetBetStats gets total bets statistics
+func (k Keeper) GetBetStats(ctx sdk.Context) (val types.BetStats) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.BetStatusKey))
+
+	b := store.Get(types.KeyPrefix("0"))
+	if b == nil {
+		return val
+	}
+
+	k.cdc.MustUnmarshal(b, &val)
+	return val
+}
+
 // SetActiveBet set a specific bet in the store for its creator
 func (k Keeper) SetActiveBet(ctx sdk.Context, bet types.Bet) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ActiveBetKeyPrefix))

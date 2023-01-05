@@ -9,6 +9,8 @@ const (
 	ActiveBetKeyPrefix = "Bet/Active/"
 	// SettledBetKeyPrefix is the settled bet prefix to retrieve all settled Bet
 	SettledBetKeyPrefix = "Bet/Settled/"
+	// BetStatusKey is the total count of bets key
+	BetStatusKey = "BetStats/"
 )
 
 // ActiveBetKey returns the store key to retrieve an Active Bet from the index fields

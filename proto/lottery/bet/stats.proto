@@ -1,0 +1,9 @@
+syntax = "proto3";
+package vjdmhd.lottery.bet;
+
+option go_package = "github.com/vjdmhd/lottery/x/bet/types";
+
+message BetStats {
+  uint64 count = 1; 
+}
+

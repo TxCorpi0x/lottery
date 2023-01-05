@@ -29,7 +29,8 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet, 
 
 	for i := 0; i < n; i++ {
 		bet := types.Bet{
-			Id: strconv.Itoa(i),
+			Id:      strconv.Itoa(i),
+			Creator: "known",
 		}
 		nullify.Fill(&bet)
 		state.ActiveBetList = append(state.ActiveBetList, bet)
@@ -50,7 +51,7 @@ func TestShowBet(t *testing.T) {
 	}
 	for _, tc := range []struct {
 		desc    string
-		idIndex string
+		creator string
 
 		args []string
 		err  error
@@ -58,14 +59,14 @@ func TestShowBet(t *testing.T) {
 	}{
 		{
 			desc:    "found",
-			idIndex: activeObjs[0].Id,
+			creator: activeObjs[0].Creator,
 
 			args: common,
-			obj:  activeObjs[0],
+			obj:  activeObjs[1],
 		},
 		{
 			desc:    "not found",
-			idIndex: strconv.Itoa(100000),
+			creator: "unknown",
 
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),
@@ -73,7 +74,7 @@ func TestShowBet(t *testing.T) {
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
-				tc.idIndex,
+				tc.creator,
 			}
 			args = append(args, tc.args...)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowActiveBet(), args)
@@ -153,9 +154,9 @@ func TestListBet(t *testing.T) {
 		var resp types.QueryAllBetResponse
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
-		require.Equal(t, len(activeObjs), int(resp.Pagination.Total))
+		require.Equal(t, 1, int(resp.Pagination.Total))
 		require.ElementsMatch(t,
-			nullify.Fill(activeObjs),
+			nullify.Fill([]types.Bet{activeObjs[4]}),
 			nullify.Fill(resp.Bet),
 		)
 	})

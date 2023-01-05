@@ -2,9 +2,10 @@ import { Client, registry, MissingWalletError } from 'vjdmhd-lottery-client-ts'
 
 import { Bet } from "vjdmhd-lottery-client-ts/vjdmhd.lottery.bet/types"
 import { Params } from "vjdmhd-lottery-client-ts/vjdmhd.lottery.bet/types"
+import { BetStats } from "vjdmhd-lottery-client-ts/vjdmhd.lottery.bet/types"
 
 
-export { Bet, Params };
+export { Bet, Params, BetStats };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -42,6 +43,7 @@ const getDefaultState = () => {
 				_Structure: {
 						Bet: getStructure(Bet.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						BetStats: getStructure(BetStats.fromPartial({})),
 						
 		},
 		_Registry: registry,
