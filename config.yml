@@ -17,3 +17,11 @@ client:
 faucet:
   name: bob
   coins: ["5token", "100000stake"]
+genesis:
+  app_state:
+    lottery: 
+      params: 
+        lottery_fee: "5"
+        bet_size:
+          min_bet: "1"
+          max_bet: "100"

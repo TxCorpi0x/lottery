@@ -31,21 +31,21 @@ func TestLotteryQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryGetLotteryRequest{
-				Index: msgs[0].Id,
+				Id: msgs[0].Id,
 			},
 			response: &types.QueryGetLotteryResponse{Lottery: msgs[0]},
 		},
 		{
 			desc: "Second",
 			request: &types.QueryGetLotteryRequest{
-				Index: msgs[1].Id,
+				Id: msgs[1].Id,
 			},
 			response: &types.QueryGetLotteryResponse{Lottery: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetLotteryRequest{
-				Index: strconv.Itoa(100000),
+				Id: uint64(100000),
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},

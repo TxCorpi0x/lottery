@@ -9,22 +9,26 @@
  * ---------------------------------------------------------------
  */
 
+export interface LotteryBetSize {
+  /** @format uint64 */
+  min_bet?: string;
+
+  /** @format uint64 */
+  max_bet?: string;
+}
+
 export interface LotteryLottery {
+  /** @format uint64 */
   id?: string;
 
-  /** @format uint64 */
+  /** @format int64 */
   start_block?: string;
 
-  /** @format uint64 */
+  /** @format int64 */
   end_block?: string;
 
   /** @format uint64 */
   bet_count?: string;
-
-  /** @format uint64 */
-  tx_count?: string;
-
-  /** @format uint64 */
   winner_id?: string;
 
   /**
@@ -34,7 +38,6 @@ export interface LotteryLottery {
    * signatures required by gogoproto.
    */
   payout?: V1Beta1Coin;
-  creator?: string;
 }
 
 /**
@@ -43,9 +46,7 @@ export interface LotteryLottery {
 export interface LotteryParams {
   /** @format uint64 */
   lottery_fee?: string;
-
-  /** @format uint64 */
-  minimal_bet?: string;
+  bet_size?: LotteryBetSize;
 }
 
 export interface LotteryQueryAllLotteryResponse {
@@ -298,6 +299,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
+   * @name QueryCurrentLottery
+   * @summary Queries the current Lottery.
+   * @request GET:/vjdmhd/lottery/lottery/current-lottery
+   */
+  queryCurrentLottery = (params: RequestParams = {}) =>
+    this.request<LotteryQueryGetLotteryResponse, RpcStatus>({
+      path: `/vjdmhd/lottery/lottery/current-lottery`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
    * @name QueryLotteryAll
    * @summary Queries a list of Lottery items.
    * @request GET:/vjdmhd/lottery/lottery/lottery
@@ -326,11 +343,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryLottery
    * @summary Queries a Lottery by index.
-   * @request GET:/vjdmhd/lottery/lottery/lottery/{index}
+   * @request GET:/vjdmhd/lottery/lottery/lottery/{id}
    */
-  queryLottery = (index: string, params: RequestParams = {}) =>
+  queryLottery = (id: string, params: RequestParams = {}) =>
     this.request<LotteryQueryGetLotteryResponse, RpcStatus>({
-      path: `/vjdmhd/lottery/lottery/lottery/${index}`,
+      path: `/vjdmhd/lottery/lottery/lottery/${id}`,
       method: "GET",
       format: "json",
       ...params,

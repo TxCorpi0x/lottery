@@ -110,6 +110,7 @@ import (
 	lotterymodule "github.com/vjdmhd/lottery/x/lottery"
 	lotterymodulekeeper "github.com/vjdmhd/lottery/x/lottery/keeper"
 	lotterymoduletypes "github.com/vjdmhd/lottery/x/lottery/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	appparams "github.com/vjdmhd/lottery/app/params"
@@ -117,8 +118,7 @@ import (
 )
 
 const (
-	AccountAddressPrefix = "cosmos"
-	Name                 = "lottery"
+	Name = "lottery"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -509,14 +509,6 @@ func New(
 		govConfig,
 	)
 
-	app.LotteryKeeper = *lotterymodulekeeper.NewKeeper(
-		appCodec,
-		keys[lotterymoduletypes.StoreKey],
-		keys[lotterymoduletypes.MemStoreKey],
-		app.GetSubspace(lotterymoduletypes.ModuleName),
-	)
-	lotteryModule := lotterymodule.NewAppModule(appCodec, app.LotteryKeeper, app.AccountKeeper, app.BankKeeper)
-
 	app.BetKeeper = *betmodulekeeper.NewKeeper(
 		appCodec,
 		keys[betmoduletypes.StoreKey],
@@ -524,6 +516,17 @@ func New(
 		app.GetSubspace(betmoduletypes.ModuleName),
 	)
 	betModule := betmodule.NewAppModule(appCodec, app.BetKeeper, app.AccountKeeper, app.BankKeeper)
+
+	app.LotteryKeeper = *lotterymodulekeeper.NewKeeper(
+		appCodec,
+		keys[lotterymoduletypes.StoreKey],
+		keys[lotterymoduletypes.MemStoreKey],
+		app.GetSubspace(lotterymoduletypes.ModuleName),
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.BetKeeper,
+	)
+	lotteryModule := lotterymodule.NewAppModule(appCodec, app.LotteryKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -570,8 +573,9 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		icaModule,
-		lotteryModule,
 		betModule,
+		lotteryModule,
+
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -601,8 +605,9 @@ func New(
 		group.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
-		lotterymoduletypes.ModuleName,
 		betmoduletypes.ModuleName,
+		lotterymoduletypes.ModuleName,
+
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -627,8 +632,9 @@ func New(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
-		lotterymoduletypes.ModuleName,
 		betmoduletypes.ModuleName,
+		lotterymoduletypes.ModuleName,
+
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -658,8 +664,9 @@ func New(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
-		lotterymoduletypes.ModuleName,
 		betmoduletypes.ModuleName,
+		lotterymoduletypes.ModuleName,
+
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 

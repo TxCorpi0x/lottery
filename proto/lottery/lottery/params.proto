@@ -10,5 +10,10 @@ message Params {
   option (gogoproto.goproto_stringer) = false;
   
   uint64 lottery_fee = 1;
-  uint64 minimal_bet = 2;
+  BetSize bet_size = 2 [(gogoproto.moretags) = "yaml:\"bet_size\"", (gogoproto.nullable) = false];
+}
+
+message BetSize {
+  uint64 min_bet = 1;
+  uint64 max_bet = 2;
 }

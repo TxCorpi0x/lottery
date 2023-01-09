@@ -6,45 +6,37 @@ import { Coin } from "../../cosmos/base/v1beta1/coin";
 export const protobufPackage = "vjdmhd.lottery.lottery";
 
 export interface Lottery {
-  id: string;
+  id: number;
   startBlock: number;
   endBlock: number;
   betCount: number;
-  txCount: number;
-  winnerId: number;
+  winnerId: string;
   payout: Coin | undefined;
-  creator: string;
 }
 
 function createBaseLottery(): Lottery {
-  return { id: "", startBlock: 0, endBlock: 0, betCount: 0, txCount: 0, winnerId: 0, payout: undefined, creator: "" };
+  return { id: 0, startBlock: 0, endBlock: 0, betCount: 0, winnerId: "", payout: undefined };
 }
 
 export const Lottery = {
   encode(message: Lottery, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0) {
+      writer.uint32(8).uint64(message.id);
     }
     if (message.startBlock !== 0) {
-      writer.uint32(16).uint64(message.startBlock);
+      writer.uint32(16).int64(message.startBlock);
     }
     if (message.endBlock !== 0) {
-      writer.uint32(24).uint64(message.endBlock);
+      writer.uint32(24).int64(message.endBlock);
     }
     if (message.betCount !== 0) {
       writer.uint32(32).uint64(message.betCount);
     }
-    if (message.txCount !== 0) {
-      writer.uint32(40).uint64(message.txCount);
-    }
-    if (message.winnerId !== 0) {
-      writer.uint32(48).uint64(message.winnerId);
+    if (message.winnerId !== "") {
+      writer.uint32(42).string(message.winnerId);
     }
     if (message.payout !== undefined) {
-      Coin.encode(message.payout, writer.uint32(58).fork()).ldelim();
-    }
-    if (message.creator !== "") {
-      writer.uint32(66).string(message.creator);
+      Coin.encode(message.payout, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -57,28 +49,22 @@ export const Lottery = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = reader.string();
+          message.id = longToNumber(reader.uint64() as Long);
           break;
         case 2:
-          message.startBlock = longToNumber(reader.uint64() as Long);
+          message.startBlock = longToNumber(reader.int64() as Long);
           break;
         case 3:
-          message.endBlock = longToNumber(reader.uint64() as Long);
+          message.endBlock = longToNumber(reader.int64() as Long);
           break;
         case 4:
           message.betCount = longToNumber(reader.uint64() as Long);
           break;
         case 5:
-          message.txCount = longToNumber(reader.uint64() as Long);
+          message.winnerId = reader.string();
           break;
         case 6:
-          message.winnerId = longToNumber(reader.uint64() as Long);
-          break;
-        case 7:
           message.payout = Coin.decode(reader, reader.uint32());
-          break;
-        case 8:
-          message.creator = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -90,42 +76,36 @@ export const Lottery = {
 
   fromJSON(object: any): Lottery {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
+      id: isSet(object.id) ? Number(object.id) : 0,
       startBlock: isSet(object.startBlock) ? Number(object.startBlock) : 0,
       endBlock: isSet(object.endBlock) ? Number(object.endBlock) : 0,
       betCount: isSet(object.betCount) ? Number(object.betCount) : 0,
-      txCount: isSet(object.txCount) ? Number(object.txCount) : 0,
-      winnerId: isSet(object.winnerId) ? Number(object.winnerId) : 0,
+      winnerId: isSet(object.winnerId) ? String(object.winnerId) : "",
       payout: isSet(object.payout) ? Coin.fromJSON(object.payout) : undefined,
-      creator: isSet(object.creator) ? String(object.creator) : "",
     };
   },
 
   toJSON(message: Lottery): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
+    message.id !== undefined && (obj.id = Math.round(message.id));
     message.startBlock !== undefined && (obj.startBlock = Math.round(message.startBlock));
     message.endBlock !== undefined && (obj.endBlock = Math.round(message.endBlock));
     message.betCount !== undefined && (obj.betCount = Math.round(message.betCount));
-    message.txCount !== undefined && (obj.txCount = Math.round(message.txCount));
-    message.winnerId !== undefined && (obj.winnerId = Math.round(message.winnerId));
+    message.winnerId !== undefined && (obj.winnerId = message.winnerId);
     message.payout !== undefined && (obj.payout = message.payout ? Coin.toJSON(message.payout) : undefined);
-    message.creator !== undefined && (obj.creator = message.creator);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Lottery>, I>>(object: I): Lottery {
     const message = createBaseLottery();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0;
     message.startBlock = object.startBlock ?? 0;
     message.endBlock = object.endBlock ?? 0;
     message.betCount = object.betCount ?? 0;
-    message.txCount = object.txCount ?? 0;
-    message.winnerId = object.winnerId ?? 0;
+    message.winnerId = object.winnerId ?? "";
     message.payout = (object.payout !== undefined && object.payout !== null)
       ? Coin.fromPartial(object.payout)
       : undefined;
-    message.creator = object.creator ?? "";
     return message;
   },
 };

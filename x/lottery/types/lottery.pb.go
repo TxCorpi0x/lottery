@@ -25,14 +25,12 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Lottery struct {
-	Id         string     `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	StartBlock uint64     `protobuf:"varint,2,opt,name=start_block,json=startBlock,proto3" json:"start_block,omitempty"`
-	EndBlock   uint64     `protobuf:"varint,3,opt,name=end_block,json=endBlock,proto3" json:"end_block,omitempty"`
+	Id         uint64     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	StartBlock int64      `protobuf:"varint,2,opt,name=start_block,json=startBlock,proto3" json:"start_block,omitempty"`
+	EndBlock   int64      `protobuf:"varint,3,opt,name=end_block,json=endBlock,proto3" json:"end_block,omitempty"`
 	BetCount   uint64     `protobuf:"varint,4,opt,name=bet_count,json=betCount,proto3" json:"bet_count,omitempty"`
-	TxCount    uint64     `protobuf:"varint,5,opt,name=tx_count,json=txCount,proto3" json:"tx_count,omitempty"`
-	WinnerId   uint64     `protobuf:"varint,6,opt,name=winner_id,json=winnerId,proto3" json:"winner_id,omitempty"`
-	Payout     types.Coin `protobuf:"bytes,7,opt,name=payout,proto3,castrepeated=github.com/cosmos/cosmos-sdk/types.Coin" json:"payout"`
-	Creator    string     `protobuf:"bytes,8,opt,name=creator,proto3" json:"creator,omitempty"`
+	WinnerId   string     `protobuf:"bytes,5,opt,name=winner_id,json=winnerId,proto3" json:"winner_id,omitempty"`
+	Payout     types.Coin `protobuf:"bytes,6,opt,name=payout,proto3,castrepeated=github.com/cosmos/cosmos-sdk/types.Coin" json:"payout"`
 }
 
 func (m *Lottery) Reset()         { *m = Lottery{} }
@@ -68,21 +66,21 @@ func (m *Lottery) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Lottery proto.InternalMessageInfo
 
-func (m *Lottery) GetId() string {
+func (m *Lottery) GetId() uint64 {
 	if m != nil {
 		return m.Id
 	}
-	return ""
+	return 0
 }
 
-func (m *Lottery) GetStartBlock() uint64 {
+func (m *Lottery) GetStartBlock() int64 {
 	if m != nil {
 		return m.StartBlock
 	}
 	return 0
 }
 
-func (m *Lottery) GetEndBlock() uint64 {
+func (m *Lottery) GetEndBlock() int64 {
 	if m != nil {
 		return m.EndBlock
 	}
@@ -96,18 +94,11 @@ func (m *Lottery) GetBetCount() uint64 {
 	return 0
 }
 
-func (m *Lottery) GetTxCount() uint64 {
-	if m != nil {
-		return m.TxCount
-	}
-	return 0
-}
-
-func (m *Lottery) GetWinnerId() uint64 {
+func (m *Lottery) GetWinnerId() string {
 	if m != nil {
 		return m.WinnerId
 	}
-	return 0
+	return ""
 }
 
 func (m *Lottery) GetPayout() types.Coin {
@@ -117,13 +108,6 @@ func (m *Lottery) GetPayout() types.Coin {
 	return types.Coin{}
 }
 
-func (m *Lottery) GetCreator() string {
-	if m != nil {
-		return m.Creator
-	}
-	return ""
-}
-
 func init() {
 	proto.RegisterType((*Lottery)(nil), "vjdmhd.lottery.lottery.Lottery")
 }
@@ -131,29 +115,27 @@ func init() {
 func init() { proto.RegisterFile("lottery/lottery/lottery.proto", fileDescriptor_2afbd19f2e624dbf) }
 
 var fileDescriptor_2afbd19f2e624dbf = []byte{
-	// 342 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x5c, 0x91, 0xbd, 0x6e, 0xe2, 0x40,
-	0x10, 0xc7, 0x6d, 0x1f, 0x87, 0x61, 0x91, 0xae, 0xb0, 0x4e, 0x27, 0x03, 0xba, 0x05, 0xa5, 0x09,
-	0x29, 0xb2, 0x2b, 0x92, 0x37, 0x80, 0x2a, 0x52, 0x2a, 0xca, 0x34, 0xc8, 0xeb, 0x5d, 0xc1, 0x06,
-	0xd8, 0x41, 0xf6, 0x40, 0xe0, 0x2d, 0xf2, 0x1c, 0x3c, 0x09, 0x25, 0x65, 0xaa, 0x24, 0x82, 0x17,
-	0x89, 0xbc, 0x6b, 0x50, 0x94, 0x6a, 0x66, 0xfe, 0xbf, 0xf9, 0xd0, 0xcc, 0x90, 0xff, 0x73, 0x40,
-	0x54, 0xd9, 0x96, 0xff, 0xb0, 0x6c, 0x99, 0x01, 0x42, 0xf4, 0x6f, 0xfd, 0x2c, 0x17, 0x53, 0xc9,
-	0xce, 0x6a, 0x69, 0x5b, 0x7f, 0x27, 0x30, 0x01, 0x9b, 0xc2, 0x0b, 0xcf, 0x65, 0xb7, 0x68, 0x0a,
-	0xf9, 0x02, 0x72, 0x2e, 0x92, 0x5c, 0xf1, 0x75, 0x5f, 0x28, 0x4c, 0xfa, 0x3c, 0x05, 0x6d, 0x1c,
-	0xbf, 0xda, 0x05, 0x24, 0x7c, 0x74, 0x1d, 0xa2, 0x3f, 0x24, 0xd0, 0x32, 0xf6, 0xbb, 0x7e, 0xaf,
-	0x3e, 0x0a, 0xb4, 0x8c, 0x3a, 0xa4, 0x91, 0x63, 0x92, 0xe1, 0x58, 0xcc, 0x21, 0x9d, 0xc5, 0x41,
-	0xd7, 0xef, 0x55, 0x46, 0xc4, 0x4a, 0x83, 0x42, 0x89, 0xda, 0xa4, 0xae, 0x8c, 0x2c, 0xf1, 0x2f,
-	0x8b, 0x6b, 0xca, 0xc8, 0x0b, 0x14, 0x0a, 0xc7, 0x29, 0xac, 0x0c, 0xc6, 0x15, 0x07, 0x85, 0xc2,
-	0x61, 0x11, 0x47, 0x4d, 0x52, 0xc3, 0x4d, 0xc9, 0x7e, 0x5b, 0x16, 0xe2, 0xc6, 0xa1, 0x36, 0xa9,
-	0xbf, 0x68, 0x63, 0x54, 0x36, 0xd6, 0x32, 0xae, 0xba, 0x3a, 0x27, 0x3c, 0xc8, 0x48, 0x90, 0xea,
-	0x32, 0xd9, 0xc2, 0x0a, 0xe3, 0xb0, 0xeb, 0xf7, 0x1a, 0x77, 0x4d, 0xe6, 0xf6, 0x63, 0xc5, 0x7e,
-	0xac, 0xdc, 0x8f, 0x0d, 0x41, 0x9b, 0x01, 0xdf, 0xbf, 0x77, 0xbc, 0xdd, 0x47, 0xe7, 0x7a, 0xa2,
-	0x71, 0xba, 0x12, 0x2c, 0x85, 0x05, 0x2f, 0x8f, 0xe1, 0xcc, 0x6d, 0x2e, 0x67, 0x1c, 0xb7, 0x4b,
-	0x95, 0xdb, 0x82, 0x51, 0xd9, 0x39, 0x8a, 0x49, 0x98, 0x66, 0x2a, 0x41, 0xc8, 0xe2, 0x9a, 0xbd,
-	0xc5, 0x39, 0x1c, 0x0c, 0xf7, 0x47, 0xea, 0x1f, 0x8e, 0xd4, 0xff, 0x3c, 0x52, 0xff, 0xf5, 0x44,
-	0xbd, 0xc3, 0x89, 0x7a, 0x6f, 0x27, 0xea, 0x3d, 0xdd, 0x7c, 0x1b, 0xe2, 0xfe, 0x73, 0xf9, 0xde,
-	0xe6, 0xe2, 0xd9, 0x59, 0xa2, 0x6a, 0x0f, 0x7f, 0xff, 0x15, 0x00, 0x00, 0xff, 0xff, 0x0f, 0x74,
-	0xf3, 0x2d, 0xe7, 0x01, 0x00, 0x00,
+	// 320 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x5c, 0x91, 0xc1, 0x4e, 0x32, 0x31,
+	0x14, 0x85, 0xa7, 0xc0, 0xcf, 0x0f, 0x25, 0x71, 0x31, 0x31, 0x66, 0xc4, 0x58, 0x26, 0x6e, 0x1c,
+	0x17, 0xb6, 0x41, 0xdf, 0x00, 0x56, 0x26, 0xae, 0x66, 0xe9, 0x86, 0x4c, 0xa7, 0x0d, 0x54, 0xa0,
+	0x97, 0x4c, 0x0b, 0xca, 0x5b, 0xf8, 0x1c, 0x3e, 0x09, 0x4b, 0x96, 0xae, 0xd4, 0xc0, 0x33, 0xb8,
+	0x37, 0xd3, 0x8e, 0xc4, 0xb8, 0x3a, 0x77, 0xce, 0xb9, 0xf3, 0x25, 0xe7, 0x16, 0x9f, 0xcf, 0xc0,
+	0x5a, 0x59, 0xac, 0xd9, 0x1f, 0xa5, 0x8b, 0x02, 0x2c, 0x84, 0x27, 0xab, 0x47, 0x31, 0x9f, 0x08,
+	0xfa, 0xe3, 0x56, 0xda, 0x3d, 0x1e, 0xc3, 0x18, 0xdc, 0x0a, 0x2b, 0x27, 0xbf, 0xdd, 0x25, 0x39,
+	0x98, 0x39, 0x18, 0xc6, 0x33, 0x23, 0xd9, 0xaa, 0xcf, 0xa5, 0xcd, 0xfa, 0x2c, 0x07, 0xa5, 0x7d,
+	0x7e, 0xf1, 0x85, 0xf0, 0xff, 0x7b, 0x4f, 0x08, 0x8f, 0x70, 0x4d, 0x89, 0x08, 0xc5, 0x28, 0x69,
+	0xa4, 0x35, 0x25, 0xc2, 0x1e, 0xee, 0x18, 0x9b, 0x15, 0x76, 0xc4, 0x67, 0x90, 0x4f, 0xa3, 0x5a,
+	0x8c, 0x92, 0x7a, 0x8a, 0x9d, 0x35, 0x28, 0x9d, 0xf0, 0x0c, 0xb7, 0xa5, 0x16, 0x55, 0x5c, 0x77,
+	0x71, 0x4b, 0x6a, 0x71, 0x08, 0xb9, 0xb4, 0xa3, 0x1c, 0x96, 0xda, 0x46, 0x0d, 0x07, 0x6d, 0x71,
+	0x69, 0x87, 0xe5, 0x77, 0x19, 0x3e, 0x29, 0xad, 0x65, 0x31, 0x52, 0x22, 0xfa, 0x17, 0xa3, 0xa4,
+	0x9d, 0xb6, 0xbc, 0x71, 0x27, 0x42, 0x8e, 0x9b, 0x8b, 0x6c, 0x0d, 0x4b, 0x1b, 0x35, 0x63, 0x94,
+	0x74, 0x6e, 0x4e, 0xa9, 0x2f, 0x41, 0xcb, 0x12, 0xb4, 0x2a, 0x41, 0x87, 0xa0, 0xf4, 0x80, 0x6d,
+	0xde, 0x7b, 0xc1, 0xeb, 0x47, 0xef, 0x72, 0xac, 0xec, 0x64, 0xc9, 0x69, 0x0e, 0x73, 0x56, 0x35,
+	0xf6, 0x72, 0x6d, 0xc4, 0x94, 0xd9, 0xf5, 0x42, 0x1a, 0xf7, 0x43, 0x5a, 0x91, 0x07, 0xc3, 0xcd,
+	0x8e, 0xa0, 0xed, 0x8e, 0xa0, 0xcf, 0x1d, 0x41, 0x2f, 0x7b, 0x12, 0x6c, 0xf7, 0x24, 0x78, 0xdb,
+	0x93, 0xe0, 0xe1, 0xea, 0x17, 0xca, 0x9f, 0xfa, 0xf0, 0x10, 0xcf, 0x87, 0xc9, 0x11, 0x79, 0xd3,
+	0xdd, 0xf0, 0xf6, 0x3b, 0x00, 0x00, 0xff, 0xff, 0xdc, 0x21, 0x62, 0xf8, 0xb2, 0x01, 0x00, 0x00,
 }
 
 func (m *Lottery) Marshal() (dAtA []byte, err error) {
@@ -176,13 +158,6 @@ func (m *Lottery) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Creator) > 0 {
-		i -= len(m.Creator)
-		copy(dAtA[i:], m.Creator)
-		i = encodeVarintLottery(dAtA, i, uint64(len(m.Creator)))
-		i--
-		dAtA[i] = 0x42
-	}
 	{
 		size, err := m.Payout.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
@@ -192,16 +167,13 @@ func (m *Lottery) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintLottery(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x3a
-	if m.WinnerId != 0 {
-		i = encodeVarintLottery(dAtA, i, uint64(m.WinnerId))
+	dAtA[i] = 0x32
+	if len(m.WinnerId) > 0 {
+		i -= len(m.WinnerId)
+		copy(dAtA[i:], m.WinnerId)
+		i = encodeVarintLottery(dAtA, i, uint64(len(m.WinnerId)))
 		i--
-		dAtA[i] = 0x30
-	}
-	if m.TxCount != 0 {
-		i = encodeVarintLottery(dAtA, i, uint64(m.TxCount))
-		i--
-		dAtA[i] = 0x28
+		dAtA[i] = 0x2a
 	}
 	if m.BetCount != 0 {
 		i = encodeVarintLottery(dAtA, i, uint64(m.BetCount))
@@ -218,12 +190,10 @@ func (m *Lottery) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.Id) > 0 {
-		i -= len(m.Id)
-		copy(dAtA[i:], m.Id)
-		i = encodeVarintLottery(dAtA, i, uint64(len(m.Id)))
+	if m.Id != 0 {
+		i = encodeVarintLottery(dAtA, i, uint64(m.Id))
 		i--
-		dAtA[i] = 0xa
+		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
@@ -245,9 +215,8 @@ func (m *Lottery) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Id)
-	if l > 0 {
-		n += 1 + l + sovLottery(uint64(l))
+	if m.Id != 0 {
+		n += 1 + sovLottery(uint64(m.Id))
 	}
 	if m.StartBlock != 0 {
 		n += 1 + sovLottery(uint64(m.StartBlock))
@@ -258,18 +227,12 @@ func (m *Lottery) Size() (n int) {
 	if m.BetCount != 0 {
 		n += 1 + sovLottery(uint64(m.BetCount))
 	}
-	if m.TxCount != 0 {
-		n += 1 + sovLottery(uint64(m.TxCount))
-	}
-	if m.WinnerId != 0 {
-		n += 1 + sovLottery(uint64(m.WinnerId))
-	}
-	l = m.Payout.Size()
-	n += 1 + l + sovLottery(uint64(l))
-	l = len(m.Creator)
+	l = len(m.WinnerId)
 	if l > 0 {
 		n += 1 + l + sovLottery(uint64(l))
 	}
+	l = m.Payout.Size()
+	n += 1 + l + sovLottery(uint64(l))
 	return n
 }
 
@@ -309,8 +272,84 @@ func (m *Lottery) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 2 {
+			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowLottery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field StartBlock", wireType)
+			}
+			m.StartBlock = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowLottery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.StartBlock |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field EndBlock", wireType)
+			}
+			m.EndBlock = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowLottery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.EndBlock |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BetCount", wireType)
+			}
+			m.BetCount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowLottery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.BetCount |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field WinnerId", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -338,104 +377,9 @@ func (m *Lottery) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Id = string(dAtA[iNdEx:postIndex])
+			m.WinnerId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field StartBlock", wireType)
-			}
-			m.StartBlock = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowLottery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.StartBlock |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EndBlock", wireType)
-			}
-			m.EndBlock = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowLottery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.EndBlock |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 4:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BetCount", wireType)
-			}
-			m.BetCount = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowLottery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.BetCount |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 5:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TxCount", wireType)
-			}
-			m.TxCount = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowLottery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.TxCount |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
 		case 6:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field WinnerId", wireType)
-			}
-			m.WinnerId = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowLottery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.WinnerId |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Payout", wireType)
 			}
@@ -467,38 +411,6 @@ func (m *Lottery) Unmarshal(dAtA []byte) error {
 			if err := m.Payout.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
-			iNdEx = postIndex
-		case 8:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowLottery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthLottery
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthLottery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Creator = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
