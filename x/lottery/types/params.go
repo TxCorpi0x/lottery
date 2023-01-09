@@ -12,10 +12,13 @@ var _ paramtypes.ParamSet = (*Params)(nil)
 // params keys
 var (
 	KeyLotteryFee = []byte("LotteryFee")
-	KeyMinimalBet = []byte("MinimalBet")
+	KeyBetSize    = []byte("BetSize")
 
 	DefaultLotteryFee = uint64(5)
-	DefaultMinimalBet = uint64(1)
+	DefaultBetSize    = BetSize{
+		MinBet: uint64(1),
+		MaxBet: uint64(100),
+	}
 )
 
 // ParamKeyTable the param key table for launch module
@@ -27,7 +30,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 func NewParams() Params {
 	return Params{
 		LotteryFee: DefaultLotteryFee,
-		MinimalBet: DefaultMinimalBet,
+		BetSize:    DefaultBetSize,
 	}
 }
 
@@ -40,12 +43,18 @@ func DefaultParams() Params {
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyLotteryFee, &p.LotteryFee, validateLotteryFee),
-		paramtypes.NewParamSetPair(KeyMinimalBet, &p.MinimalBet, validateMinimalBet),
+		paramtypes.NewParamSetPair(KeyBetSize, &p.BetSize, validateBetSize),
 	}
 }
 
 // Validate validates the set of params
 func (p Params) Validate() error {
+	if err := validateLotteryFee(p.LotteryFee); err != nil {
+		return err
+	}
+	if err := validateBetSize(p.BetSize); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -64,10 +73,14 @@ func validateLotteryFee(i interface{}) error {
 	return nil
 }
 
-func validateMinimalBet(i interface{}) error {
-	_, ok := i.(uint64)
+func validateBetSize(i interface{}) error {
+	p, ok := i.(BetSize)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if p.MinBet >= p.MaxBet {
+		return fmt.Errorf("minimum value should be less than maximum value")
 	}
 
 	return nil

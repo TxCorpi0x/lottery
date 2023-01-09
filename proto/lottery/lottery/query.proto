@@ -12,13 +12,19 @@ option go_package = "github.com/vjdmhd/lottery/x/lottery/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/vjdmhd/lottery/lottery/params";
-  }
-  // Queries a Lottery by index.
+	// Parameters queries the parameters of the module.
+	rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+		option (google.api.http).get = "/vjdmhd/lottery/lottery/params";
+	}
+
+  	// Queries a Lottery by index.
 	rpc Lottery(QueryGetLotteryRequest) returns (QueryGetLotteryResponse) {
-		option (google.api.http).get = "/vjdmhd/lottery/lottery/lottery/{index}";
+		option (google.api.http).get = "/vjdmhd/lottery/lottery/lottery/{id}";
+	}
+
+	// Queries the current Lottery.
+	rpc CurrentLottery(QueryGetCurrentLotteryRequest) returns (QueryGetLotteryResponse) {
+		option (google.api.http).get = "/vjdmhd/lottery/lottery/current-lottery";
 	}
 
 	// Queries a list of Lottery items.
@@ -38,8 +44,10 @@ message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
 }
 
+message QueryGetCurrentLotteryRequest {	}
+
 message QueryGetLotteryRequest {
-	  string index = 1;
+	  uint64 id = 1;
 
 }
 

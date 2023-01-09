@@ -7,6 +7,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
@@ -29,7 +30,7 @@ func networkWithLotteryObjects(t *testing.T, n int) (*network.Network, []types.L
 
 	for i := 0; i < n; i++ {
 		lottery := types.Lottery{
-			Id: strconv.Itoa(i),
+			Id: cast.ToUint64(i),
 		}
 		nullify.Fill(&lottery)
 		state.LotteryList = append(state.LotteryList, lottery)
@@ -48,23 +49,23 @@ func TestShowLottery(t *testing.T) {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		desc    string
-		idIndex string
+		desc string
+		id   uint64
 
 		args []string
 		err  error
 		obj  types.Lottery
 	}{
 		{
-			desc:    "found",
-			idIndex: objs[0].Id,
+			desc: "found",
+			id:   objs[0].Id,
 
 			args: common,
 			obj:  objs[0],
 		},
 		{
-			desc:    "not found",
-			idIndex: strconv.Itoa(100000),
+			desc: "not found",
+			id:   uint64(100000),
 
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),
@@ -72,7 +73,7 @@ func TestShowLottery(t *testing.T) {
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
-				tc.idIndex,
+				cast.ToString(tc.id),
 			}
 			args = append(args, tc.args...)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowLottery(), args)

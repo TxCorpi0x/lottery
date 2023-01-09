@@ -11,13 +11,14 @@ const (
 
 // LotteryKey returns the store key to retrieve a Lottery from the index fields
 func LotteryKey(
-	index string,
+	id uint64,
 ) []byte {
-	var key []byte
+	return uint64ToBytes(id)
+}
 
-	indexBytes := []byte(index)
-	key = append(key, indexBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+// uint64ToBytes converts a uint64 into fixed length bytes for use in store keys.
+func uint64ToBytes(id uint64) []byte {
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, uint64(id))
+	return bz
 }

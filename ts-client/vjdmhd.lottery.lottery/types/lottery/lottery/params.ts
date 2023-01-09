@@ -7,11 +7,16 @@ export const protobufPackage = "vjdmhd.lottery.lottery";
 /** Params defines the parameters for the module. */
 export interface Params {
   lotteryFee: number;
-  minimalBet: number;
+  betSize: BetSize | undefined;
+}
+
+export interface BetSize {
+  minBet: number;
+  maxBet: number;
 }
 
 function createBaseParams(): Params {
-  return { lotteryFee: 0, minimalBet: 0 };
+  return { lotteryFee: 0, betSize: undefined };
 }
 
 export const Params = {
@@ -19,8 +24,8 @@ export const Params = {
     if (message.lotteryFee !== 0) {
       writer.uint32(8).uint64(message.lotteryFee);
     }
-    if (message.minimalBet !== 0) {
-      writer.uint32(16).uint64(message.minimalBet);
+    if (message.betSize !== undefined) {
+      BetSize.encode(message.betSize, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -36,7 +41,7 @@ export const Params = {
           message.lotteryFee = longToNumber(reader.uint64() as Long);
           break;
         case 2:
-          message.minimalBet = longToNumber(reader.uint64() as Long);
+          message.betSize = BetSize.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -49,21 +54,81 @@ export const Params = {
   fromJSON(object: any): Params {
     return {
       lotteryFee: isSet(object.lotteryFee) ? Number(object.lotteryFee) : 0,
-      minimalBet: isSet(object.minimalBet) ? Number(object.minimalBet) : 0,
+      betSize: isSet(object.betSize) ? BetSize.fromJSON(object.betSize) : undefined,
     };
   },
 
   toJSON(message: Params): unknown {
     const obj: any = {};
     message.lotteryFee !== undefined && (obj.lotteryFee = Math.round(message.lotteryFee));
-    message.minimalBet !== undefined && (obj.minimalBet = Math.round(message.minimalBet));
+    message.betSize !== undefined && (obj.betSize = message.betSize ? BetSize.toJSON(message.betSize) : undefined);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Params>, I>>(object: I): Params {
     const message = createBaseParams();
     message.lotteryFee = object.lotteryFee ?? 0;
-    message.minimalBet = object.minimalBet ?? 0;
+    message.betSize = (object.betSize !== undefined && object.betSize !== null)
+      ? BetSize.fromPartial(object.betSize)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseBetSize(): BetSize {
+  return { minBet: 0, maxBet: 0 };
+}
+
+export const BetSize = {
+  encode(message: BetSize, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.minBet !== 0) {
+      writer.uint32(8).uint64(message.minBet);
+    }
+    if (message.maxBet !== 0) {
+      writer.uint32(16).uint64(message.maxBet);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BetSize {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBetSize();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.minBet = longToNumber(reader.uint64() as Long);
+          break;
+        case 2:
+          message.maxBet = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BetSize {
+    return {
+      minBet: isSet(object.minBet) ? Number(object.minBet) : 0,
+      maxBet: isSet(object.maxBet) ? Number(object.maxBet) : 0,
+    };
+  },
+
+  toJSON(message: BetSize): unknown {
+    const obj: any = {};
+    message.minBet !== undefined && (obj.minBet = Math.round(message.minBet));
+    message.maxBet !== undefined && (obj.maxBet = Math.round(message.maxBet));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<BetSize>, I>>(object: I): BetSize {
+    const message = createBaseBetSize();
+    message.minBet = object.minBet ?? 0;
+    message.maxBet = object.maxBet ?? 0;
     return message;
   },
 };

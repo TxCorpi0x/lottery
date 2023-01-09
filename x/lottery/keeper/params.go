@@ -15,3 +15,7 @@ func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	k.paramstore.SetParamSet(ctx, &params)
 }
+
+func (k Keeper) GetLotteryFee(ctx sdk.Context) uint64 {
+	return k.GetParams(ctx).LotteryFee
+}

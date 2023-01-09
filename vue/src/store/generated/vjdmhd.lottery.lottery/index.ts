@@ -2,9 +2,10 @@ import { Client, registry, MissingWalletError } from 'vjdmhd-lottery-client-ts'
 
 import { Lottery } from "vjdmhd-lottery-client-ts/vjdmhd.lottery.lottery/types"
 import { Params } from "vjdmhd-lottery-client-ts/vjdmhd.lottery.lottery/types"
+import { BetSize } from "vjdmhd-lottery-client-ts/vjdmhd.lottery.lottery/types"
 
 
-export { Lottery, Params };
+export { Lottery, Params, BetSize };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -37,11 +38,13 @@ const getDefaultState = () => {
 	return {
 				Params: {},
 				Lottery: {},
+				CurrentLottery: {},
 				LotteryAll: {},
 				
 				_Structure: {
 						Lottery: getStructure(Lottery.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						BetSize: getStructure(BetSize.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -81,6 +84,12 @@ export default {
 						(<any> params).query=null
 					}
 			return state.Lottery[JSON.stringify(params)] ?? {}
+		},
+				getCurrentLottery: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.CurrentLottery[JSON.stringify(params)] ?? {}
 		},
 				getLotteryAll: (state) => (params = { params: {}}) => {
 					if (!(<any> params).query) {
@@ -153,7 +162,7 @@ export default {
 			try {
 				const key = params ?? {};
 				const client = initClient(rootGetters);
-				let value= (await client.VjdmhdLotteryLottery.query.queryLottery( key.index)).data
+				let value= (await client.VjdmhdLotteryLottery.query.queryLottery( key.id)).data
 				
 					
 				commit('QUERY', { query: 'Lottery', key: { params: {...key}, query}, value })
@@ -161,6 +170,28 @@ export default {
 				return getters['getLottery']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryLottery API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryCurrentLottery({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.VjdmhdLotteryLottery.query.queryCurrentLottery()).data
+				
+					
+				commit('QUERY', { query: 'CurrentLottery', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryCurrentLottery', payload: { options: { all }, params: {...key},query }})
+				return getters['getCurrentLottery']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryCurrentLottery API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

@@ -5,6 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/vjdmhd/lottery/x/lottery/types"
 )
@@ -52,10 +53,13 @@ func CmdShowLottery() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argIndex := args[0]
+			argIndex, err := cast.ToUint64E(args[0])
+			if err != nil {
+				return err
+			}
 
 			params := &types.QueryGetLotteryRequest{
-				Index: argIndex,
+				Id: argIndex,
 			}
 
 			res, err := queryClient.Lottery(context.Background(), params)
