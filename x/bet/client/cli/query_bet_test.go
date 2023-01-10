@@ -29,7 +29,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet, 
 
 	for i := 0; i < n; i++ {
 		bet := types.Bet{
-			Id:      strconv.Itoa(i),
+			Id:      uint64(i),
 			Creator: "known",
 		}
 		nullify.Fill(&bet)

@@ -20,6 +20,7 @@ type (
 		AccountKeeper types.AccountKeeper
 		BankKeeper    types.BankKeeper
 		BetKeeper     types.BetKeeper
+		StakingKeeper types.StakingKeeper
 	}
 )
 
@@ -31,6 +32,7 @@ func NewKeeper(
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 	betKeeper types.BetKeeper,
+	stakingKeeper types.StakingKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -38,7 +40,6 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-
 		cdc:           cdc,
 		storeKey:      storeKey,
 		memKey:        memKey,
@@ -46,6 +47,7 @@ func NewKeeper(
 		AccountKeeper: accountKeeper,
 		BankKeeper:    bankKeeper,
 		BetKeeper:     betKeeper,
+		StakingKeeper: stakingKeeper,
 	}
 }
 

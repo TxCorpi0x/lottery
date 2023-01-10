@@ -44325,14 +44325,15 @@ paths:
                   properties:
                     id:
                       type: string
+                      format: uint64
                     lottery_id:
                       type: string
+                      format: uint64
                     height:
                       type: string
                       format: int64
                     amount:
                       type: string
-                      format: uint64
                     creator:
                       type: string
               pagination:
@@ -44455,14 +44456,15 @@ paths:
                 properties:
                   id:
                     type: string
+                    format: uint64
                   lottery_id:
                     type: string
+                    format: uint64
                   height:
                     type: string
                     format: int64
                   amount:
                     type: string
-                    format: uint64
                   creator:
                     type: string
         default:
@@ -44553,6 +44555,7 @@ paths:
                     format: uint64
                   winner_id:
                     type: string
+                    format: uint64
                   payout:
                     type: object
                     properties:
@@ -44617,6 +44620,7 @@ paths:
                       format: uint64
                     winner_id:
                       type: string
+                      format: uint64
                     payout:
                       type: object
                       properties:
@@ -44764,6 +44768,7 @@ paths:
                     format: uint64
                   winner_id:
                     type: string
+                    format: uint64
                   payout:
                     type: object
                     properties:
@@ -44821,16 +44826,13 @@ paths:
                 properties:
                   lottery_fee:
                     type: string
-                    format: uint64
                   bet_size:
                     type: object
                     properties:
                       min_bet:
                         type: string
-                        format: uint64
                       max_bet:
                         type: string
-                        format: uint64
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -74244,14 +74246,15 @@ definitions:
     properties:
       id:
         type: string
+        format: uint64
       lottery_id:
         type: string
+        format: uint64
       height:
         type: string
         format: int64
       amount:
         type: string
-        format: uint64
       creator:
         type: string
   vjdmhd.lottery.bet.MsgCreateBetResponse:
@@ -74269,14 +74272,15 @@ definitions:
           properties:
             id:
               type: string
+              format: uint64
             lottery_id:
               type: string
+              format: uint64
             height:
               type: string
               format: int64
             amount:
               type: string
-              format: uint64
             creator:
               type: string
       pagination:
@@ -74313,14 +74317,15 @@ definitions:
         properties:
           id:
             type: string
+            format: uint64
           lottery_id:
             type: string
+            format: uint64
           height:
             type: string
             format: int64
           amount:
             type: string
-            format: uint64
           creator:
             type: string
   vjdmhd.lottery.bet.QueryParamsResponse:
@@ -74335,10 +74340,8 @@ definitions:
     properties:
       min_bet:
         type: string
-        format: uint64
       max_bet:
         type: string
-        format: uint64
   vjdmhd.lottery.lottery.Lottery:
     type: object
     properties:
@@ -74356,6 +74359,7 @@ definitions:
         format: uint64
       winner_id:
         type: string
+        format: uint64
       payout:
         type: object
         properties:
@@ -74373,16 +74377,13 @@ definitions:
     properties:
       lottery_fee:
         type: string
-        format: uint64
       bet_size:
         type: object
         properties:
           min_bet:
             type: string
-            format: uint64
           max_bet:
             type: string
-            format: uint64
     description: Params defines the parameters for the module.
   vjdmhd.lottery.lottery.QueryAllLotteryResponse:
     type: object
@@ -74406,6 +74407,7 @@ definitions:
               format: uint64
             winner_id:
               type: string
+              format: uint64
             payout:
               type: object
               properties:
@@ -74467,6 +74469,7 @@ definitions:
             format: uint64
           winner_id:
             type: string
+            format: uint64
           payout:
             type: object
             properties:
@@ -74491,14 +74494,11 @@ definitions:
         properties:
           lottery_fee:
             type: string
-            format: uint64
           bet_size:
             type: object
             properties:
               min_bet:
                 type: string
-                format: uint64
               max_bet:
                 type: string
-                format: uint64
     description: QueryParamsResponse is response type for the Query/Params RPC method.

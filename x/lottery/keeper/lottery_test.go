@@ -75,7 +75,7 @@ func TestGetOrCreateCurrentLottery(t *testing.T) {
 	require.Equal(t, currentLottery.Id, currentLottery2.Id)
 
 	// set lottery as finished, then the new lottery should be generated
-	keeper.FinishLottery(ctx, currentLottery, 0, sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(0)), "100")
+	keeper.FinishLottery(ctx, currentLottery, 0, sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(0)), 100)
 	currentLottery3 := keeper.GetOrCreateCurrentLottery(ctx)
 	require.NotEqual(t, currentLottery3.Id, currentLottery2.Id)
 
@@ -92,7 +92,7 @@ func TestCurrentCurrentLottery(t *testing.T) {
 		ctx = ctx.WithBlockTime(ctx.BlockTime().Add(5 * time.Second))
 		currentLottery := keeper.GetOrCreateCurrentLottery(ctx)
 
-		keeper.FinishLottery(ctx, currentLottery, 0, sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(0)), "100")
+		keeper.FinishLottery(ctx, currentLottery, 0, sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(0)), 100)
 	}
 
 	// check if the current lottery is returned currectly or not

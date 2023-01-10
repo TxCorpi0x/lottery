@@ -1,6 +1,7 @@
 package types
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -15,7 +16,7 @@ var _ sdk.Msg = &MsgCreateBet{}
 
 func NewMsgCreateBet(
 	creator string,
-	amount uint64,
+	amount sdkmath.Int,
 
 ) *MsgCreateBet {
 	return &MsgCreateBet{

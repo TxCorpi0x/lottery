@@ -1,10 +1,10 @@
 package cli
 
 import (
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/vjdmhd/lottery/x/bet/types"
 )
@@ -13,12 +13,12 @@ func CmdCreateBet() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-bet [amount]",
 		Short: "Create a new bet",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
-			argAmount, err := cast.ToUint64E(args[3])
-			if err != nil {
-				return err
+			argAmount, ok := sdkmath.NewIntFromString(args[0])
+			if !ok {
+				return types.ErrInvalidAmount
 			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)

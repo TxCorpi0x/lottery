@@ -25,15 +25,15 @@ func TestCreateBet(t *testing.T) {
 
 	fields := []string{"111", "111", "111"}
 	for _, tc := range []struct {
-		desc    string
-		idIndex string
+		desc   string
+		amount string
 
 		args []string
 		err  error
 		code uint32
 	}{
 		{
-			idIndex: strconv.Itoa(0),
+			amount: strconv.Itoa(0),
 
 			desc: "valid",
 			args: []string{
@@ -46,7 +46,7 @@ func TestCreateBet(t *testing.T) {
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
-				tc.idIndex,
+				tc.amount,
 			}
 			args = append(args, fields...)
 			args = append(args, tc.args...)

@@ -5,30 +5,30 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "vjdmhd.lottery.bet";
 
 export interface Bet {
-  id: string;
-  lotteryId: string;
+  id: number;
+  lotteryId: number;
   height: number;
-  amount: number;
+  amount: string;
   creator: string;
 }
 
 function createBaseBet(): Bet {
-  return { id: "", lotteryId: "", height: 0, amount: 0, creator: "" };
+  return { id: 0, lotteryId: 0, height: 0, amount: "", creator: "" };
 }
 
 export const Bet = {
   encode(message: Bet, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0) {
+      writer.uint32(8).uint64(message.id);
     }
-    if (message.lotteryId !== "") {
-      writer.uint32(18).string(message.lotteryId);
+    if (message.lotteryId !== 0) {
+      writer.uint32(16).uint64(message.lotteryId);
     }
     if (message.height !== 0) {
       writer.uint32(24).int64(message.height);
     }
-    if (message.amount !== 0) {
-      writer.uint32(32).uint64(message.amount);
+    if (message.amount !== "") {
+      writer.uint32(34).string(message.amount);
     }
     if (message.creator !== "") {
       writer.uint32(42).string(message.creator);
@@ -44,16 +44,16 @@ export const Bet = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = reader.string();
+          message.id = longToNumber(reader.uint64() as Long);
           break;
         case 2:
-          message.lotteryId = reader.string();
+          message.lotteryId = longToNumber(reader.uint64() as Long);
           break;
         case 3:
           message.height = longToNumber(reader.int64() as Long);
           break;
         case 4:
-          message.amount = longToNumber(reader.uint64() as Long);
+          message.amount = reader.string();
           break;
         case 5:
           message.creator = reader.string();
@@ -68,30 +68,30 @@ export const Bet = {
 
   fromJSON(object: any): Bet {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
-      lotteryId: isSet(object.lotteryId) ? String(object.lotteryId) : "",
+      id: isSet(object.id) ? Number(object.id) : 0,
+      lotteryId: isSet(object.lotteryId) ? Number(object.lotteryId) : 0,
       height: isSet(object.height) ? Number(object.height) : 0,
-      amount: isSet(object.amount) ? Number(object.amount) : 0,
+      amount: isSet(object.amount) ? String(object.amount) : "",
       creator: isSet(object.creator) ? String(object.creator) : "",
     };
   },
 
   toJSON(message: Bet): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.lotteryId !== undefined && (obj.lotteryId = message.lotteryId);
+    message.id !== undefined && (obj.id = Math.round(message.id));
+    message.lotteryId !== undefined && (obj.lotteryId = Math.round(message.lotteryId));
     message.height !== undefined && (obj.height = Math.round(message.height));
-    message.amount !== undefined && (obj.amount = Math.round(message.amount));
+    message.amount !== undefined && (obj.amount = message.amount);
     message.creator !== undefined && (obj.creator = message.creator);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Bet>, I>>(object: I): Bet {
     const message = createBaseBet();
-    message.id = object.id ?? "";
-    message.lotteryId = object.lotteryId ?? "";
+    message.id = object.id ?? 0;
+    message.lotteryId = object.lotteryId ?? 0;
     message.height = object.height ?? 0;
-    message.amount = object.amount ?? 0;
+    message.amount = object.amount ?? "";
     message.creator = object.creator ?? "";
     return message;
   },

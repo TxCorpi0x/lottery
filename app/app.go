@@ -183,6 +183,7 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		lotterymoduletypes.ModuleName:  nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -514,8 +515,8 @@ func New(
 		keys[betmoduletypes.StoreKey],
 		keys[betmoduletypes.MemStoreKey],
 		app.GetSubspace(betmoduletypes.ModuleName),
+		app.BankKeeper,
 	)
-	betModule := betmodule.NewAppModule(appCodec, app.BetKeeper, app.AccountKeeper, app.BankKeeper)
 
 	app.LotteryKeeper = *lotterymodulekeeper.NewKeeper(
 		appCodec,
@@ -525,7 +526,11 @@ func New(
 		app.AccountKeeper,
 		app.BankKeeper,
 		app.BetKeeper,
+		app.StakingKeeper,
 	)
+	app.BetKeeper.SetLotteryKeeper(&app.LotteryKeeper)
+
+	betModule := betmodule.NewAppModule(appCodec, app.BetKeeper, app.AccountKeeper, app.BankKeeper)
 	lotteryModule := lotterymodule.NewAppModule(appCodec, app.LotteryKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
@@ -896,8 +901,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
-	paramsKeeper.Subspace(lotterymoduletypes.ModuleName)
 	paramsKeeper.Subspace(betmoduletypes.ModuleName)
+	paramsKeeper.Subspace(lotterymoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

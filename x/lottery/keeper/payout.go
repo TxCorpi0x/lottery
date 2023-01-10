@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/vjdmhd/lottery/app/params"
 	betmoduletypes "github.com/vjdmhd/lottery/x/bet/types"
@@ -8,18 +9,19 @@ import (
 )
 
 func (k Keeper) CalculateAndTransferPayout(ctx sdk.Context, winnerBet betmoduletypes.Bet, bets []betmoduletypes.Bet) sdk.Coin {
-	var highestBetAmount, totalAmount uint64
+	highestBetAmount := math.NewInt(0)
+	totalAmount := math.NewInt(0)
 	lowestBetAmount := bets[0].Amount
 	for _, v := range bets {
-		if v.Amount > highestBetAmount {
+		if v.Amount.GT(highestBetAmount) {
 			highestBetAmount = v.Amount
 		}
 
-		if v.Amount < lowestBetAmount {
+		if v.Amount.LT(lowestBetAmount) {
 			lowestBetAmount = v.Amount
 		}
 
-		totalAmount += v.Amount
+		totalAmount = totalAmount.Add(v.Amount)
 	}
 
 	if winnerBet.Amount == highestBetAmount {
@@ -34,7 +36,7 @@ func (k Keeper) CalculateAndTransferPayout(ctx sdk.Context, winnerBet betmodulet
 		return sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(0))
 	} else {
 		// transfer total amount of this lottery to the winner balance
-		coin := sdk.NewCoin(params.DefaultBondDenom, sdk.NewIntFromUint64(totalAmount))
+		coin := sdk.NewCoin(params.DefaultBondDenom, totalAmount)
 		k.BankKeeper.SendCoinsFromModuleToAccount(
 			ctx,
 			types.ModuleName,

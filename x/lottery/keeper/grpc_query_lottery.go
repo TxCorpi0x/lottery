@@ -20,7 +20,7 @@ func (k Keeper) LotteryAll(c context.Context, req *types.QueryAllLotteryRequest)
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	lotteryStore := prefix.NewStore(store, types.KeyPrefix(types.LotteryKeyPrefix))
+	lotteryStore := prefix.NewStore(store, types.LotteryKeyPrefix)
 
 	pageRes, err := query.Paginate(lotteryStore, req.Pagination, func(key []byte, value []byte) error {
 		var lottery types.Lottery

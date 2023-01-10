@@ -11,7 +11,7 @@ message Lottery {
   int64 start_block = 2; 
   int64 end_block = 3; 
   uint64 bet_count = 4; 
-  string winner_id = 5; 
+  uint64 winner_id = 5; 
   cosmos.base.v1beta1.Coin payout = 6 [(gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.nullable) = false]; 
 }
 

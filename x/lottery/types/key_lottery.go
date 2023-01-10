@@ -1,24 +1,19 @@
 package types
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+
+	"github.com/vjdmhd/lottery/utils"
+)
 
 var _ binary.ByteOrder
 
-const (
+var (
 	// LotteryKeyPrefix is the prefix to retrieve all Lottery
-	LotteryKeyPrefix = "Lottery/value/"
+	LotteryKeyPrefix = []byte{0x00}
 )
 
 // LotteryKey returns the store key to retrieve a Lottery from the index fields
-func LotteryKey(
-	id uint64,
-) []byte {
-	return uint64ToBytes(id)
-}
-
-// uint64ToBytes converts a uint64 into fixed length bytes for use in store keys.
-func uint64ToBytes(id uint64) []byte {
-	bz := make([]byte, 8)
-	binary.BigEndian.PutUint64(bz, uint64(id))
-	return bz
+func LotteryKey(id uint64) []byte {
+	return utils.Uint64ToBytes(id)
 }

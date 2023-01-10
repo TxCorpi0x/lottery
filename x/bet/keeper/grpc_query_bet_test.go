@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"testing"
 
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
@@ -19,11 +20,11 @@ import (
 var _ = strconv.IntSize
 
 func TestBetQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.BetKeeper(t)
+	keeper, _, ctx := keepertest.BetKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNActiveBet(keeper, ctx, 2)
-	msgs[0].Amount = 1
-	msgs[1].Amount = 1
+	msgs[0].Amount = math.NewInt(1)
+	msgs[1].Amount = math.NewInt(1)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetBetRequest
@@ -72,7 +73,7 @@ func TestBetQuerySingle(t *testing.T) {
 }
 
 func TestBetQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.BetKeeper(t)
+	keeper, _, ctx := keepertest.BetKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNActiveBet(keeper, ctx, 5)
 
@@ -116,7 +117,7 @@ func TestBetQueryPaginated(t *testing.T) {
 		resp, err := keeper.ActiveBetAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, 1, int(resp.Pagination.Total))
-		msgs[0].Amount = 4
+		msgs[0].Amount = math.NewInt(4)
 		require.ElementsMatch(t,
 			nullify.Fill([]types.Bet{msgs[0]}),
 			nullify.Fill(resp.Bet),

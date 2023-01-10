@@ -1,4 +1,4 @@
 package types
 
 // UnknownWinnerID is the id of unfinished lottery winner
-const UnknownWinnerID = "unknown"
+const UnknownWinnerID = 0

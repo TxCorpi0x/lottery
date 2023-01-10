@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/vjdmhd/lottery/x/lottery/types"
 )
@@ -16,6 +17,11 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	k.paramstore.SetParamSet(ctx, &params)
 }
 
-func (k Keeper) GetLotteryFee(ctx sdk.Context) uint64 {
+func (k Keeper) GetLotteryFee(ctx sdk.Context) sdkmath.Int {
 	return k.GetParams(ctx).LotteryFee
+}
+
+func (k Keeper) GetMinMaxBetAllowed(ctx sdk.Context) (sdkmath.Int, sdkmath.Int) {
+	betSize := k.GetParams(ctx).BetSize
+	return betSize.MinBet, betSize.MaxBet
 }

@@ -10,13 +10,14 @@
  */
 
 export interface BetBet {
+  /** @format uint64 */
   id?: string;
+
+  /** @format uint64 */
   lottery_id?: string;
 
   /** @format int64 */
   height?: string;
-
-  /** @format uint64 */
   amount?: string;
   creator?: string;
 }

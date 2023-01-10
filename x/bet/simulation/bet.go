@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"strconv"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -25,10 +26,10 @@ func SimulateMsgCreateBet(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 
-		i := r.Uint64()
+		i := r.Int63()
 		msg := &types.MsgCreateBet{
 			Creator: simAccount.Address.String(),
-			Amount:  i,
+			Amount:  sdkmath.NewInt(i),
 		}
 
 		// TODO: get lottery id from lottery module

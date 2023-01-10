@@ -20,7 +20,7 @@ func (k Keeper) ActiveBetAll(c context.Context, req *types.QueryAllBetRequest) (
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	betStore := prefix.NewStore(store, types.KeyPrefix(types.ActiveBetKeyPrefix))
+	betStore := prefix.NewStore(store, types.ActiveBetKeyPrefix)
 
 	pageRes, err := query.Paginate(betStore, req.Pagination, func(key []byte, value []byte) error {
 		var bet types.Bet
