@@ -98,7 +98,7 @@ func TestDemo(t *testing.T) {
 		}
 
 		// wait and simulate the block time
-		time.Sleep(1 * time.Second)
+		time.Sleep(5 * time.Second)
 
 		// run end blocker to simulate end block
 		lotteryModule.EndBlocker(ctx, tApp.LotteryKeeper)

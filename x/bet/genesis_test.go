@@ -34,7 +34,6 @@ func TestGenesis(t *testing.T) {
 				Creator: "u1",
 			},
 		},
-		// this line is used by starport scaffolding # genesis/test/state
 	}
 
 	k, _, ctx := keepertest.BetKeeper(t)
@@ -47,5 +46,4 @@ func TestGenesis(t *testing.T) {
 
 	require.ElementsMatch(t, genesisState.ActiveBetList, got.ActiveBetList)
 	require.ElementsMatch(t, genesisState.SettledBetList, got.SettledBetList)
-	// this line is used by starport scaffolding # genesis/test/assert
 }

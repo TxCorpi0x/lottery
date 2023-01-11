@@ -6,27 +6,30 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "lottery/bet/params.proto";
 import "lottery/bet/bet.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/vjdmhd/lottery/x/bet/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/vjdmhd/lottery/bet/params";
-  }
-  // Queries a active Bet by creator.
+  	// Parameters queries the parameters of the module.
+  	rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    	option (google.api.http).get = "/vjdmhd/lottery/bet/params";
+  	}
+
+  	// Queries a active Bet by creator.
 	rpc ActiveBet(QueryGetBetRequest) returns (QueryGetBetResponse) {
 		option (google.api.http).get = "/vjdmhd/lottery/bet/activebet/{creator}";
 	}
 
 	// Queries a list of active Bet items.
-	rpc ActiveBetAll(QueryAllBetRequest) returns (QueryAllBetResponse) {
+	rpc ActiveBetAll(QueryAllActiveBetRequest) returns (QueryAllBetResponse) {
 		option (google.api.http).get = "/vjdmhd/lottery/bet/activebet";
 	}
 
-// this line is used by starport scaffolding # 2
+	// Queries a list of settled Bet items of a lottery.
+	rpc SettledBetAll(QueryAllSettledBetRequest) returns (QueryAllBetResponse) {
+		option (google.api.http).get = "/vjdmhd/lottery/bet/settledbet/{lottery_id}";
+	}
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -47,7 +50,7 @@ message QueryGetBetResponse {
 	Bet bet = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryAllBetRequest {
+message QueryAllActiveBetRequest {
 	cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
@@ -56,4 +59,7 @@ message QueryAllBetResponse {
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-// this line is used by starport scaffolding # 3
+message QueryAllSettledBetRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+	uint64 lottery_id = 2; 
+}

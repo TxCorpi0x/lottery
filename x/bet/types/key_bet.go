@@ -19,19 +19,15 @@ var (
 
 // ActiveBetKey returns the store key to retrieve an Active Bet from the index fields
 func ActiveBetKey(creator string) []byte {
-	var key []byte
+	return KeyPrefix(creator)
+}
 
-	key = append(key, []byte(creator)...)
-
-	return key
+// SettledBetOfLotteryPrefix returns the store key to retrieve all Settled Bet of lottery
+func SettledBetOfLotteryPrefix(lotteryID uint64) []byte {
+	return append(SettledBetKeyPrefix, utils.Uint64ToBytes(lotteryID)...)
 }
 
 // SettledBetKey returns the store key to retrieve a Settled Bet from the index fields
 func SettledBetKey(lotteryID, betID uint64) []byte {
-	var key []byte
-
-	key = append(key, utils.Uint64ToBytes(lotteryID)...)
-	key = append(key, utils.Uint64ToBytes(betID)...)
-
-	return key
+	return append(utils.Uint64ToBytes(lotteryID), utils.Uint64ToBytes(betID)...)
 }

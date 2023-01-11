@@ -9,7 +9,6 @@ export const protobufPackage = "vjdmhd.lottery.bet";
 export interface GenesisState {
   params: Params | undefined;
   activeBetList: Bet[];
-  /** this line is used by starport scaffolding # genesis/proto/state */
   settledBetList: Bet[];
 }
 

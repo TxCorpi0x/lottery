@@ -111,8 +111,6 @@ import (
 	lotterymodulekeeper "github.com/vjdmhd/lottery/x/lottery/keeper"
 	lotterymoduletypes "github.com/vjdmhd/lottery/x/lottery/types"
 
-	// this line is used by starport scaffolding # stargate/app/moduleImport
-
 	appparams "github.com/vjdmhd/lottery/app/params"
 	"github.com/vjdmhd/lottery/docs"
 )
@@ -121,11 +119,8 @@ const (
 	Name = "lottery"
 )
 
-// this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
-
 func getGovProposalHandlers() []govclient.ProposalHandler {
 	var govProposalHandlers []govclient.ProposalHandler
-	// this line is used by starport scaffolding # stargate/app/govProposalHandlers
 
 	govProposalHandlers = append(govProposalHandlers,
 		paramsclient.ProposalHandler,
@@ -134,7 +129,6 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 		upgradeclient.LegacyCancelProposalHandler,
 		ibcclientclient.UpdateClientProposalHandler,
 		ibcclientclient.UpgradeProposalHandler,
-		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 
 	return govProposalHandlers
@@ -170,7 +164,6 @@ var (
 		vesting.AppModuleBasic{},
 		lotterymodule.AppModuleBasic{},
 		betmodule.AppModuleBasic{},
-		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
 	// module account permissions
@@ -184,7 +177,6 @@ var (
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		lotterymoduletypes.ModuleName:  nil,
-		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
 
@@ -245,9 +237,7 @@ type App struct {
 	ScopedICAHostKeeper  capabilitykeeper.ScopedKeeper
 
 	LotteryKeeper lotterymodulekeeper.Keeper
-
-	BetKeeper betmodulekeeper.Keeper
-	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
+	BetKeeper     betmodulekeeper.Keeper
 
 	// mm is the module manager
 	mm *module.Manager
@@ -293,7 +283,6 @@ func New(
 		icacontrollertypes.StoreKey,
 		lotterymoduletypes.StoreKey,
 		betmoduletypes.StoreKey,
-		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -331,7 +320,6 @@ func New(
 	scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
 	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
 	scopedICAHostKeeper := app.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
-	// this line is used by starport scaffolding # stargate/app/scopedKeeper
 
 	// add keepers
 	app.AccountKeeper = authkeeper.NewAccountKeeper(
@@ -533,8 +521,6 @@ func New(
 	betModule := betmodule.NewAppModule(appCodec, app.BetKeeper, app.AccountKeeper, app.BankKeeper)
 	lotteryModule := lotterymodule.NewAppModule(appCodec, app.LotteryKeeper, app.AccountKeeper, app.BankKeeper)
 
-	// this line is used by starport scaffolding # stargate/app/keeperDefinition
-
 	// Sealing prevents other modules from creating scoped sub-keepers
 	app.CapabilityKeeper.Seal()
 
@@ -542,7 +528,6 @@ func New(
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
 		AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
-	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
 
 	/****  Module Options ****/
@@ -580,8 +565,6 @@ func New(
 		icaModule,
 		betModule,
 		lotteryModule,
-
-		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -612,8 +595,6 @@ func New(
 		vestingtypes.ModuleName,
 		betmoduletypes.ModuleName,
 		lotterymoduletypes.ModuleName,
-
-		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -639,8 +620,6 @@ func New(
 		vestingtypes.ModuleName,
 		betmoduletypes.ModuleName,
 		lotterymoduletypes.ModuleName,
-
-		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -671,8 +650,6 @@ func New(
 		vestingtypes.ModuleName,
 		betmoduletypes.ModuleName,
 		lotterymoduletypes.ModuleName,
-
-		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -703,7 +680,6 @@ func New(
 		transferModule,
 		lotteryModule,
 		betModule,
-		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
 
@@ -742,7 +718,6 @@ func New(
 
 	app.ScopedIBCKeeper = scopedIBCKeeper
 	app.ScopedTransferKeeper = scopedTransferKeeper
-	// this line is used by starport scaffolding # stargate/app/beforeInitReturn
 
 	return app
 }
@@ -903,7 +878,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(betmoduletypes.ModuleName)
 	paramsKeeper.Subspace(lotterymoduletypes.ModuleName)
-	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
 }

@@ -2,14 +2,12 @@ syntax = "proto3";
 package vjdmhd.lottery.bet;
 
 import "gogoproto/gogo.proto";
-// this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "github.com/vjdmhd/lottery/x/bet/types";
 
 // Msg defines the Msg service.
 service Msg {
       rpc CreateBet(MsgCreateBet) returns (MsgCreateBetResponse);
-  // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgCreateBet {
@@ -20,5 +18,3 @@ message MsgCreateBet {
     (gogoproto.nullable)   = false];
 }
 message MsgCreateBetResponse {}
-
-// this line is used by starport scaffolding # proto/tx/message

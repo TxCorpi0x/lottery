@@ -35,8 +35,6 @@ const (
 	opWeightMsgDeleteLottery = "op_weight_msg_lottery"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgDeleteLottery int = 100
-
-	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -55,7 +53,6 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 				Id: 1,
 			},
 		},
-		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&lotteryGenesis)
 }
@@ -84,8 +81,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgCreateLottery = defaultWeightMsgCreateLottery
 		},
 	)
-
-	// this line is used by starport scaffolding # simapp/module/operation
 
 	return operations
 }

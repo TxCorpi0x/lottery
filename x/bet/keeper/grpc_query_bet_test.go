@@ -19,7 +19,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func TestBetQuerySingle(t *testing.T) {
+func TestActiveBetQuerySingle(t *testing.T) {
 	keeper, _, ctx := keepertest.BetKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNActiveBet(keeper, ctx, 2)
@@ -72,13 +72,13 @@ func TestBetQuerySingle(t *testing.T) {
 	}
 }
 
-func TestBetQueryPaginated(t *testing.T) {
+func TestActiveBetQueryPaginated(t *testing.T) {
 	keeper, _, ctx := keepertest.BetKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNActiveBet(keeper, ctx, 5)
 
-	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllBetRequest {
-		return &types.QueryAllBetRequest{
+	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllActiveBetRequest {
+		return &types.QueryAllActiveBetRequest{
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,

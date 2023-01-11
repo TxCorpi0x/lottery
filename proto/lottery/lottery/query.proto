@@ -6,7 +6,6 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "lottery/lottery/params.proto";
 import "lottery/lottery/lottery.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/vjdmhd/lottery/x/lottery/types";
 
@@ -32,7 +31,6 @@ service Query {
 		option (google.api.http).get = "/vjdmhd/lottery/lottery/lottery";
 	}
 
-// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -63,5 +61,3 @@ message QueryAllLotteryResponse {
 	repeated Lottery lottery = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
-
-// this line is used by starport scaffolding # 3

@@ -110,7 +110,6 @@ export const MsgCreateBetResponse = {
 
 /** Msg defines the Msg service. */
 export interface Msg {
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   CreateBet(request: MsgCreateBet): Promise<MsgCreateBetResponse>;
 }
 

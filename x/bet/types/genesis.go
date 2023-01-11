@@ -12,8 +12,7 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		ActiveBetList:  []Bet{},
 		SettledBetList: []Bet{},
-		// this line is used by starport scaffolding # genesis/types/default
-		Params: DefaultParams(),
+		Params:         DefaultParams(),
 	}
 }
 
@@ -40,7 +39,6 @@ func (gs GenesisState) Validate() error {
 		}
 		settledBetIndexMap[index] = struct{}{}
 	}
-	// this line is used by starport scaffolding # genesis/types/validate
 
 	return gs.Params.Validate()
 }

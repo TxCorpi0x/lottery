@@ -21,7 +21,7 @@ genesis:
   app_state:
     lottery: 
       params: 
-        lottery_fee: "5"
+        lottery_fee: "5000000"
         bet_size:
           min_bet: "1000000"
           max_bet: "100000000"

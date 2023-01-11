@@ -2,14 +2,9 @@ package cli
 
 import (
 	"fmt"
-	// "strings"
-
-	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
-	// sdk "github.com/cosmos/cosmos-sdk/types"
-
+	"github.com/spf13/cobra"
 	"github.com/vjdmhd/lottery/x/bet/types"
 )
 
@@ -27,7 +22,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	cmd.AddCommand(CmdQueryParams())
 	cmd.AddCommand(CmdListActiveBet())
 	cmd.AddCommand(CmdShowActiveBet())
-	// this line is used by starport scaffolding # 1
+	cmd.AddCommand(CmdListSettledBet())
 
 	return cmd
 }

@@ -35,8 +35,6 @@ const (
 	opWeightMsgDeleteBet = "op_weight_msg_bet"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgDeleteBet int = 100
-
-	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -67,7 +65,6 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 				Id:      1,
 			},
 		},
-		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&betGenesis)
 }
@@ -100,8 +97,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgCreateBet,
 		betsimulation.SimulateMsgCreateBet(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
-
-	// this line is used by starport scaffolding # simapp/module/operation
 
 	return operations
 }

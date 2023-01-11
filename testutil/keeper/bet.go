@@ -36,6 +36,9 @@ func BetKeeper(t testing.TB) (*keeper.Keeper, bankkeeper.Keeper, sdk.Context) {
 	bankStoreKey := sdk.NewKVStoreKey(banktypes.StoreKey)
 	bankMemStoreKey := storetypes.NewMemoryStoreKey("mem_" + banktypes.StoreKey)
 
+	stakingStoreKey := sdk.NewKVStoreKey(stakingtypes.StoreKey)
+	stakingMemStoreKey := storetypes.NewMemoryStoreKey("mem_" + stakingtypes.StoreKey)
+
 	lotteryStoreKey := sdk.NewKVStoreKey(lotterymoduletypes.StoreKey)
 	lotteryMemStoreKey := storetypes.NewMemoryStoreKey(lotterymoduletypes.MemStoreKey)
 
@@ -47,6 +50,8 @@ func BetKeeper(t testing.TB) (*keeper.Keeper, bankkeeper.Keeper, sdk.Context) {
 	stateStore.MountStoreWithDB(accMemStoreKey, storetypes.StoreTypeMemory, nil)
 	stateStore.MountStoreWithDB(bankStoreKey, storetypes.StoreTypeIAVL, db)
 	stateStore.MountStoreWithDB(bankMemStoreKey, storetypes.StoreTypeMemory, nil)
+	stateStore.MountStoreWithDB(stakingStoreKey, storetypes.StoreTypeIAVL, db)
+	stateStore.MountStoreWithDB(stakingMemStoreKey, storetypes.StoreTypeMemory, nil)
 	stateStore.MountStoreWithDB(lotteryStoreKey, storetypes.StoreTypeIAVL, db)
 	stateStore.MountStoreWithDB(lotteryMemStoreKey, storetypes.StoreTypeMemory, nil)
 	require.NoError(t, stateStore.LoadLatestVersion())
@@ -67,7 +72,6 @@ func BetKeeper(t testing.TB) (*keeper.Keeper, bankkeeper.Keeper, sdk.Context) {
 		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		types.ModuleName:               nil,
-		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 
 	accountKpr := authkeeper.NewAccountKeeper(
@@ -93,8 +97,6 @@ func BetKeeper(t testing.TB) (*keeper.Keeper, bankkeeper.Keeper, sdk.Context) {
 		map[string]bool{},
 	)
 
-	stakingStoreKey := sdk.NewKVStoreKey(stakingtypes.StoreKey)
-	stakingMemStoreKey := storetypes.NewMemoryStoreKey("mem_" + stakingtypes.StoreKey)
 	stakingParamsSubspace := typesparams.NewSubspace(cdc,
 		types.Amino,
 		stakingStoreKey,

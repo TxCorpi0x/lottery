@@ -4,7 +4,6 @@ package vjdmhd.lottery.bet;
 import "gogoproto/gogo.proto";
 import "lottery/bet/params.proto";
 import "lottery/bet/bet.proto";
-// this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/vjdmhd/lottery/x/bet/types";
 
@@ -13,5 +12,4 @@ message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
   repeated Bet active_bet_list = 2 [(gogoproto.nullable) = false];
   repeated Bet settled_bet_list = 3 [(gogoproto.nullable) = false];
-  // this line is used by starport scaffolding # genesis/proto/state
 }

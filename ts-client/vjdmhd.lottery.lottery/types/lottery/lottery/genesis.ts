@@ -7,10 +7,7 @@ export const protobufPackage = "vjdmhd.lottery.lottery";
 
 /** GenesisState defines the lottery module's genesis state. */
 export interface GenesisState {
-  params:
-    | Params
-    | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
+  params: Params | undefined;
   lotteryList: Lottery[];
 }
 

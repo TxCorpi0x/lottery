@@ -2,13 +2,9 @@ syntax = "proto3";
 package vjdmhd.lottery.lottery;
 
 import "lottery/lottery/lottery.proto";
-// this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "github.com/vjdmhd/lottery/x/lottery/types";
 
 // Msg defines the Msg service.
-service Msg {
-  // this line is used by starport scaffolding # proto/tx/rpc
-}
+service Msg {}
 
-// this line is used by starport scaffolding # proto/tx/message
