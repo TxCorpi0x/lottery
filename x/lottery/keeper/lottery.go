@@ -96,11 +96,12 @@ func (k Keeper) GetOrCreateCurrentLottery(ctx sdk.Context) (current types.Lotter
 	currentLottery := k.GetCurrentLottery(ctx)
 
 	// if the winner is determined ths means that the lottery has not finished
-	if currentLottery.WinnerId == types.UnknownWinnerID {
+	if currentLottery.Id != 0 && currentLottery.WinnerId == types.UnknownWinnerID {
 		return currentLottery
 	}
 
 	newLottery := types.NewLottery(ctx)
+
 	// sets new lottery
 	k.SetLottery(ctx, newLottery)
 

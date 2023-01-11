@@ -13,8 +13,9 @@ import (
 	"github.com/vjdmhd/lottery/app/params"
 	lotsim "github.com/vjdmhd/lottery/testutil/simapp"
 	betKeeper "github.com/vjdmhd/lottery/x/bet/keeper"
-	"github.com/vjdmhd/lottery/x/bet/types"
+	bettypes "github.com/vjdmhd/lottery/x/bet/types"
 	lotteryModule "github.com/vjdmhd/lottery/x/lottery"
+	"github.com/vjdmhd/lottery/x/lottery/types"
 )
 
 func TestDemo(t *testing.T) {
@@ -25,13 +26,14 @@ func TestDemo(t *testing.T) {
 	}
 
 	validators := []lotsim.TestValidator{lotsim.TestParamValidatorAddresses["val1"], lotsim.TestParamValidatorAddresses["val2"]}
-	// wctx := sdk.WrapSDKContext(ctx)
 
 	betSrv := betKeeper.NewMsgServerImpl(tApp.BetKeeper)
 
 	clientInices := []int{}
 
 	for blockNo := 1; blockNo <= 100; blockNo++ {
+		fmt.Printf("---------------------------Block %d Ended------------------------------\n", blockNo)
+
 		// pick random validator between two validators (val1, val2)
 		rand.Seed(time.Now().UnixNano())
 		proposer := validators[rand.Intn(len(validators))]
@@ -54,6 +56,11 @@ func TestDemo(t *testing.T) {
 				clientInices = append(clientInices, i)
 			}
 
+		}
+
+		// there is not enough bets to continue blocks
+		if len(clientInices) < types.MinBetCount {
+			break
 		}
 
 		// remove random element from inices slice until running out
@@ -79,7 +86,7 @@ func TestDemo(t *testing.T) {
 			// create bet by running message server method
 			betAmount := clientNumber * cast.ToInt(math.Pow(10, params.LOTExponent))
 			// fmt.Println(creator.Address.String())
-			_, err := betSrv.CreateBet(ctx, types.NewMsgCreateBet(
+			_, err := betSrv.CreateBet(ctx, bettypes.NewMsgCreateBet(
 				creator.Address.String(),
 				sdk.NewInt(int64(betAmount)),
 			))
@@ -90,13 +97,16 @@ func TestDemo(t *testing.T) {
 			time.Sleep(50 * time.Microsecond)
 		}
 
+		// wait and simulate the block time
 		time.Sleep(1 * time.Second)
+
+		// run end blocker to simulate end block
 		lotteryModule.EndBlocker(ctx, tApp.LotteryKeeper)
-		fmt.Printf("-------------------------------------------------------------\n")
+
 	}
 
 	finalActiveBets := tApp.BetKeeper.GetAllActiveBet(ctx)
-	require.Less(t, len(finalActiveBets), 10)
+	require.LessOrEqual(t, len(finalActiveBets), types.MinBetCount)
 
 }
 

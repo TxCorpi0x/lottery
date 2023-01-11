@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	cosmossdk.io/math v1.0.0-beta.3
-	github.com/cespare/xxhash/v2 v2.1.2
+	github.com/cespare/xxhash v1.1.0
 	github.com/cosmos/cosmos-sdk v0.46.3
 	github.com/cosmos/ibc-go/v5 v5.0.0
 	github.com/gogo/protobuf v1.3.3
@@ -50,7 +50,7 @@ require (
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
-	github.com/cespare/xxhash v1.1.0 // indirect
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/cockroachdb/apd/v2 v2.0.2 // indirect
 	github.com/coinbase/rosetta-sdk-go v0.7.9 // indirect

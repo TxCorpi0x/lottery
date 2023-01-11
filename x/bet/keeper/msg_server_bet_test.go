@@ -20,7 +20,7 @@ func TestBetMsgServerCreate(t *testing.T) {
 	for i := 0; i < 5; i++ {
 		expected := &types.MsgCreateBet{
 			Creator: lotsim.TestParamUsers["client1"].Address.String(),
-			Amount:  math.NewInt(int64(50)),
+			Amount:  math.NewInt(int64(5000000)),
 		}
 		_, err := srv.CreateBet(wctx, expected)
 		require.NoError(t, err)

@@ -47,9 +47,11 @@ func LotteryKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 	)
 
 	maccPerms := map[string][]string{
-		authtypes.FeeCollectorName: nil,
-		minttypes.ModuleName:       {authtypes.Minter},
-		types.ModuleName:           nil,
+		authtypes.FeeCollectorName:     nil,
+		minttypes.ModuleName:           {authtypes.Minter},
+		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+		types.ModuleName:               nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 

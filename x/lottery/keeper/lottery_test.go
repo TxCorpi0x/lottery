@@ -97,5 +97,5 @@ func TestCurrentCurrentLottery(t *testing.T) {
 
 	// check if the current lottery is returned currectly or not
 	latestLottery := keeper.GetCurrentLottery(ctx)
-	require.Equal(t, uint64(ctx.BlockTime().Unix()), latestLottery.Id)
+	require.Equal(t, uint64(ctx.BlockTime().UnixNano()), latestLottery.Id)
 }

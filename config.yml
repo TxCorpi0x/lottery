@@ -1,9 +1,9 @@
 version: 1
 accounts:
   - name: alice
-    coins: ["200000000token", "200000000stake"]
+    coins: ["500000000utoken", "200000000stake"]
   - name: bob
-    coins: ["200000000token", "100000000stake"]
+    coins: ["500000000utoken", "100000000stake"]
 validators:
   - name: alice
     bonded: "100000000stake"
@@ -16,12 +16,12 @@ client:
     path: "vue/src/store"
 faucet:
   name: bob
-  coins: ["5token", "100000stake"]
+  coins: ["5000000utoken", "100000stake"]
 genesis:
   app_state:
     lottery: 
       params: 
         lottery_fee: "5"
         bet_size:
-          min_bet: "1"
-          max_bet: "100"
+          min_bet: "1000000"
+          max_bet: "100000000"
