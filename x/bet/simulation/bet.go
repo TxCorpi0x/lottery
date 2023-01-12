@@ -18,7 +18,6 @@ import (
 var _ = strconv.IntSize
 
 func SimulateMsgCreateBet(
-	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
@@ -49,7 +48,6 @@ func SimulateMsgCreateBet(
 			SimAccount:      simAccount,
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
-			AccountKeeper:   ak,
 			Bankkeeper:      bk,
 		}
 		return simulation.GenAndDeliverTxWithRandFees(txCtx)

@@ -38,7 +38,7 @@ func (k msgServer) CreateBet(goCtx context.Context, msg *types.MsgCreateBet) (*t
 	k.lotteryKeeper.TransferFeesAndAmount(ctx, accAddr, totalCoin)
 
 	// get current number of bets to create incremental id
-	betStats := k.GetBetStats(ctx)
+	betStats := k.getBetStats(ctx)
 	betStats.Count += 1
 
 	// create active bet object to be set in store
@@ -46,7 +46,7 @@ func (k msgServer) CreateBet(goCtx context.Context, msg *types.MsgCreateBet) (*t
 	k.SetActiveBet(ctx, bet)
 
 	// update the counts of the bets
-	k.SetBetStats(ctx, betStats)
+	k.setBetStats(ctx, betStats)
 
 	return &types.MsgCreateBetResponse{}, nil
 }

@@ -9,14 +9,14 @@ import (
 )
 
 // SetBetCount sets total bets statistics
-func (k Keeper) SetBetStats(ctx sdk.Context, betstats types.BetStats) {
+func (k Keeper) setBetStats(ctx sdk.Context, betstats types.BetStats) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BetStatsKey)
 	b := k.cdc.MustMarshal(&betstats)
 	store.Set(types.KeyPrefix("0"), b)
 }
 
-// GetBetStats gets total bets statistics
-func (k Keeper) GetBetStats(ctx sdk.Context) (val types.BetStats) {
+// getBetStats gets total bets statistics
+func (k Keeper) getBetStats(ctx sdk.Context) (val types.BetStats) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BetStatsKey)
 
 	b := store.Get(types.KeyPrefix("0"))
@@ -73,36 +73,11 @@ func (k Keeper) GetAllActiveBet(ctx sdk.Context) (list []types.Bet) {
 	return
 }
 
-// RemoveAllActiveBet removes all active bet items from the store
-func (k Keeper) RemoveAllActiveBet(ctx sdk.Context) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ActiveBetKeyPrefix)
-	allBets := k.GetAllActiveBet(ctx)
-	for _, v := range allBets {
-		store.Delete(types.ActiveBetKey(v.Creator))
-	}
-}
-
 // SetSettledBet set a specific settled bet in the store for its creator
 func (k Keeper) SetSettledBet(ctx sdk.Context, bet types.Bet) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.SettledBetKeyPrefix)
 	b := k.cdc.MustMarshal(&bet)
 	store.Set(types.SettledBetKey(bet.LotteryId, bet.Id), b)
-}
-
-// GetSettledBet returns an active bet from its creator
-func (k Keeper) GetSettledBet(
-	ctx sdk.Context,
-	lotteryID, betID uint64,
-) (val types.Bet, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.SettledBetKeyPrefix)
-
-	b := store.Get(types.SettledBetKey(lotteryID, betID))
-	if b == nil {
-		return val, false
-	}
-
-	k.cdc.MustUnmarshal(b, &val)
-	return val, true
 }
 
 // GetAllSettledBet returns all settled bet

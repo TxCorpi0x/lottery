@@ -518,7 +518,7 @@ func New(
 	)
 	app.BetKeeper.SetLotteryKeeper(&app.LotteryKeeper)
 
-	betModule := betmodule.NewAppModule(appCodec, app.BetKeeper, app.AccountKeeper, app.BankKeeper)
+	betModule := betmodule.NewAppModule(appCodec, app.BetKeeper, app.BankKeeper)
 	lotteryModule := lotterymodule.NewAppModule(appCodec, app.LotteryKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// Sealing prevents other modules from creating scoped sub-keepers
@@ -618,6 +618,8 @@ func New(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
+		// betmodule end blocker should be called before the lottery module keeper
+		// to ensure avery bet is counted in the lottery end_blocker
 		betmoduletypes.ModuleName,
 		lotterymoduletypes.ModuleName,
 	)

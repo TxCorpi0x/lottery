@@ -24,12 +24,10 @@ func TestDemo(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-
-	validators := []lotsim.TestValidator{lotsim.TestParamValidatorAddresses["val1"], lotsim.TestParamValidatorAddresses["val2"]}
-
-	betSrv := betKeeper.NewMsgServerImpl(tApp.BetKeeper)
+	betMsgSrv := betKeeper.NewMsgServerImpl(tApp.BetKeeper)
 
 	clientInices := []int{}
+	validators := []lotsim.TestValidator{lotsim.TestParamValidatorAddresses["val1"], lotsim.TestParamValidatorAddresses["val2"]}
 
 	for blockNo := 1; blockNo <= 100; blockNo++ {
 		fmt.Printf("---------------------------Block %d Ended------------------------------\n", blockNo)
@@ -49,16 +47,18 @@ func TestDemo(t *testing.T) {
 			cl := lotsim.TestParamUsers["client"+cast.ToString(i)]
 			balance := tApp.BankKeeper.SpendableCoins(ctx, cl.Address).AmountOf(params.DefaultBondDenom)
 
+			// check if the balance is sufficient to be available in the potential client list
 			betAmountAndFee := int64(i * cast.ToInt(math.Pow(10, params.LOTExponent)))
 			totalAmount := tApp.LotteryKeeper.GetLotteryFee(ctx).Add(sdk.NewInt(betAmountAndFee))
 			totalCoin := sdk.NewCoin(params.DefaultBondDenom, totalAmount)
 			if balance.GT(totalCoin.Amount) {
 				clientInices = append(clientInices, i)
 			}
-
 		}
 
 		// there is not enough bets to continue blocks
+		// note: if this gets commented, the blocks loop will continue till 100
+		// 		 and clients will pay lottery_fee and bet_amount until the account balance gets lower than sum of fee and bet amount
 		if len(clientInices) < types.MinBetCount {
 			break
 		}
@@ -73,7 +73,7 @@ func TestDemo(t *testing.T) {
 			clientNumber := clientInices[reandomIndex]
 
 			// remove picked index from slice
-			clientInices = remove(clientInices, reandomIndex)
+			clientInices = removeFromIntSlice(clientInices, reandomIndex)
 
 			// // skip the first client because the client1 and client 2
 			// // are validator operators, we skip the first one to decrease possibility of
@@ -86,7 +86,7 @@ func TestDemo(t *testing.T) {
 			// create bet by running message server method
 			betAmount := clientNumber * cast.ToInt(math.Pow(10, params.LOTExponent))
 			// fmt.Println(creator.Address.String())
-			_, err := betSrv.CreateBet(ctx, bettypes.NewMsgCreateBet(
+			_, err := betMsgSrv.CreateBet(ctx, bettypes.NewMsgCreateBet(
 				creator.Address.String(),
 				sdk.NewInt(int64(betAmount)),
 			))
@@ -110,7 +110,8 @@ func TestDemo(t *testing.T) {
 
 }
 
-func remove(s []int, i int) []int {
+// removes element and returns the slice
+func removeFromIntSlice(s []int, i int) []int {
 	s[i] = s[len(s)-1]
 	return s[:len(s)-1]
 }

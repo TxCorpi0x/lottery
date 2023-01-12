@@ -95,7 +95,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgCreateBet,
-		betsimulation.SimulateMsgCreateBet(am.accountKeeper, am.bankKeeper, am.keeper),
+		betsimulation.SimulateMsgCreateBet(am.bankKeeper, am.keeper),
 	))
 
 	return operations
