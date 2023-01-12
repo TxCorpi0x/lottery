@@ -10,10 +10,7 @@
  */
 
 export interface LotteryBetSize {
-  /** @format uint64 */
   min_bet?: string;
-
-  /** @format uint64 */
   max_bet?: string;
 }
 
@@ -29,6 +26,8 @@ export interface LotteryLottery {
 
   /** @format uint64 */
   bet_count?: string;
+
+  /** @format uint64 */
   winner_id?: string;
 
   /**
@@ -44,7 +43,6 @@ export interface LotteryLottery {
  * Params defines the parameters for the module.
  */
 export interface LotteryParams {
-  /** @format uint64 */
   lottery_fee?: string;
   bet_size?: LotteryBetSize;
 }

@@ -23,19 +23,20 @@ func TestCreateBet(t *testing.T) {
 	val := net.Validators[0]
 	ctx := val.ClientCtx
 
-	fields := []string{"111", "111", "111"}
+	fields := []string{}
 	for _, tc := range []struct {
-		desc    string
-		idIndex string
+		desc   string
+		amount string
 
 		args []string
 		err  error
 		code uint32
 	}{
 		{
-			idIndex: strconv.Itoa(0),
+			amount: strconv.Itoa(5000000),
+			code:   5,
 
-			desc: "valid",
+			desc: "validator has no utoken",
 			args: []string{
 				fmt.Sprintf("--%s=%s", flags.FlagFrom, val.Address.String()),
 				fmt.Sprintf("--%s=true", flags.FlagSkipConfirmation),
@@ -46,7 +47,7 @@ func TestCreateBet(t *testing.T) {
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
-				tc.idIndex,
+				tc.amount,
 			}
 			args = append(args, fields...)
 			args = append(args, tc.args...)

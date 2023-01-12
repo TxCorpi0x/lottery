@@ -20,7 +20,7 @@ func (k Keeper) LotteryAll(c context.Context, req *types.QueryAllLotteryRequest)
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	lotteryStore := prefix.NewStore(store, types.KeyPrefix(types.LotteryKeyPrefix))
+	lotteryStore := prefix.NewStore(store, types.LotteryKeyPrefix)
 
 	pageRes, err := query.Paginate(lotteryStore, req.Pagination, func(key []byte, value []byte) error {
 		var lottery types.Lottery
@@ -49,8 +49,16 @@ func (k Keeper) Lottery(c context.Context, req *types.QueryGetLotteryRequest) (*
 		ctx,
 		req.Id,
 	)
+
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
+	}
+
+	// if the lottery has no winner it means it is the current lottery,
+	// so we need to query active bets to calculate current bet count.
+	if val.WinnerId == types.UnknownWinnerID {
+		activeBets := k.BetKeeper.GetAllActiveBet(ctx)
+		val.BetCount = uint64(len(activeBets))
 	}
 
 	return &types.QueryGetLotteryResponse{Lottery: val}, nil

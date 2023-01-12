@@ -1,28 +1,27 @@
 /* eslint-disable */
-import Long from "long";
 import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "vjdmhd.lottery.lottery";
 
 /** Params defines the parameters for the module. */
 export interface Params {
-  lotteryFee: number;
+  lotteryFee: string;
   betSize: BetSize | undefined;
 }
 
 export interface BetSize {
-  minBet: number;
-  maxBet: number;
+  minBet: string;
+  maxBet: string;
 }
 
 function createBaseParams(): Params {
-  return { lotteryFee: 0, betSize: undefined };
+  return { lotteryFee: "", betSize: undefined };
 }
 
 export const Params = {
   encode(message: Params, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.lotteryFee !== 0) {
-      writer.uint32(8).uint64(message.lotteryFee);
+    if (message.lotteryFee !== "") {
+      writer.uint32(10).string(message.lotteryFee);
     }
     if (message.betSize !== undefined) {
       BetSize.encode(message.betSize, writer.uint32(18).fork()).ldelim();
@@ -38,7 +37,7 @@ export const Params = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.lotteryFee = longToNumber(reader.uint64() as Long);
+          message.lotteryFee = reader.string();
           break;
         case 2:
           message.betSize = BetSize.decode(reader, reader.uint32());
@@ -53,21 +52,21 @@ export const Params = {
 
   fromJSON(object: any): Params {
     return {
-      lotteryFee: isSet(object.lotteryFee) ? Number(object.lotteryFee) : 0,
+      lotteryFee: isSet(object.lotteryFee) ? String(object.lotteryFee) : "",
       betSize: isSet(object.betSize) ? BetSize.fromJSON(object.betSize) : undefined,
     };
   },
 
   toJSON(message: Params): unknown {
     const obj: any = {};
-    message.lotteryFee !== undefined && (obj.lotteryFee = Math.round(message.lotteryFee));
+    message.lotteryFee !== undefined && (obj.lotteryFee = message.lotteryFee);
     message.betSize !== undefined && (obj.betSize = message.betSize ? BetSize.toJSON(message.betSize) : undefined);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Params>, I>>(object: I): Params {
     const message = createBaseParams();
-    message.lotteryFee = object.lotteryFee ?? 0;
+    message.lotteryFee = object.lotteryFee ?? "";
     message.betSize = (object.betSize !== undefined && object.betSize !== null)
       ? BetSize.fromPartial(object.betSize)
       : undefined;
@@ -76,16 +75,16 @@ export const Params = {
 };
 
 function createBaseBetSize(): BetSize {
-  return { minBet: 0, maxBet: 0 };
+  return { minBet: "", maxBet: "" };
 }
 
 export const BetSize = {
   encode(message: BetSize, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.minBet !== 0) {
-      writer.uint32(8).uint64(message.minBet);
+    if (message.minBet !== "") {
+      writer.uint32(10).string(message.minBet);
     }
-    if (message.maxBet !== 0) {
-      writer.uint32(16).uint64(message.maxBet);
+    if (message.maxBet !== "") {
+      writer.uint32(18).string(message.maxBet);
     }
     return writer;
   },
@@ -98,10 +97,10 @@ export const BetSize = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.minBet = longToNumber(reader.uint64() as Long);
+          message.minBet = reader.string();
           break;
         case 2:
-          message.maxBet = longToNumber(reader.uint64() as Long);
+          message.maxBet = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -113,44 +112,25 @@ export const BetSize = {
 
   fromJSON(object: any): BetSize {
     return {
-      minBet: isSet(object.minBet) ? Number(object.minBet) : 0,
-      maxBet: isSet(object.maxBet) ? Number(object.maxBet) : 0,
+      minBet: isSet(object.minBet) ? String(object.minBet) : "",
+      maxBet: isSet(object.maxBet) ? String(object.maxBet) : "",
     };
   },
 
   toJSON(message: BetSize): unknown {
     const obj: any = {};
-    message.minBet !== undefined && (obj.minBet = Math.round(message.minBet));
-    message.maxBet !== undefined && (obj.maxBet = Math.round(message.maxBet));
+    message.minBet !== undefined && (obj.minBet = message.minBet);
+    message.maxBet !== undefined && (obj.maxBet = message.maxBet);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<BetSize>, I>>(object: I): BetSize {
     const message = createBaseBetSize();
-    message.minBet = object.minBet ?? 0;
-    message.maxBet = object.maxBet ?? 0;
+    message.minBet = object.minBet ?? "";
+    message.maxBet = object.maxBet ?? "";
     return message;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
@@ -162,18 +142,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

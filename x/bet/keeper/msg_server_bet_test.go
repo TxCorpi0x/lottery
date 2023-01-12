@@ -4,11 +4,10 @@ import (
 	"strconv"
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
 
-	keepertest "github.com/vjdmhd/lottery/testutil/keeper"
-	"github.com/vjdmhd/lottery/x/bet/keeper"
+	lotsim "github.com/vjdmhd/lottery/testutil/simapp"
 	"github.com/vjdmhd/lottery/x/bet/types"
 )
 
@@ -16,14 +15,12 @@ import (
 var _ = strconv.IntSize
 
 func TestBetMsgServerCreate(t *testing.T) {
-	k, ctx := keepertest.BetKeeper(t)
-	srv := keeper.NewMsgServerImpl(*k)
-	wctx := sdk.WrapSDKContext(ctx)
-	creator := "A"
+	_, k, srv, ctx, wctx := setupMsgServerAndApp(t)
+
 	for i := 0; i < 5; i++ {
 		expected := &types.MsgCreateBet{
-			Creator: creator,
-			Amount:  uint64(i),
+			Creator: lotsim.TestParamUsers["client1"].Address.String(),
+			Amount:  math.NewInt(int64(5000000)),
 		}
 		_, err := srv.CreateBet(wctx, expected)
 		require.NoError(t, err)

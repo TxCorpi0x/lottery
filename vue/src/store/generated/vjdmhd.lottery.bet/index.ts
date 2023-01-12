@@ -39,6 +39,7 @@ const getDefaultState = () => {
 				Params: {},
 				ActiveBet: {},
 				ActiveBetAll: {},
+				SettledBetAll: {},
 				
 				_Structure: {
 						Bet: getStructure(Bet.fromPartial({})),
@@ -89,6 +90,12 @@ export default {
 						(<any> params).query=null
 					}
 			return state.ActiveBetAll[JSON.stringify(params)] ?? {}
+		},
+				getSettledBetAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.SettledBetAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -189,6 +196,32 @@ export default {
 				return getters['getActiveBetAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryActiveBetAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QuerySettledBetAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.VjdmhdLotteryBet.query.querySettledBetAll( key.lottery_id, query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.VjdmhdLotteryBet.query.querySettledBetAll( key.lottery_id, {...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'SettledBetAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QuerySettledBetAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getSettledBetAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QuerySettledBetAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

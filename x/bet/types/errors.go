@@ -8,5 +8,5 @@ import (
 
 // x/bet module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrInvalidAmount = sdkerrors.Register(ModuleName, 110, "bet amount is not valid")
 )

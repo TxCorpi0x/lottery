@@ -1,4 +1,5 @@
 /* eslint-disable */
+import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { PageRequest, PageResponse } from "../../cosmos/base/query/v1beta1/pagination";
 import { Bet } from "./bet";
@@ -24,13 +25,18 @@ export interface QueryGetBetResponse {
   bet: Bet | undefined;
 }
 
-export interface QueryAllBetRequest {
+export interface QueryAllActiveBetRequest {
   pagination: PageRequest | undefined;
 }
 
 export interface QueryAllBetResponse {
   bet: Bet[];
   pagination: PageResponse | undefined;
+}
+
+export interface QueryAllSettledBetRequest {
+  pagination: PageRequest | undefined;
+  lotteryId: number;
 }
 
 function createBaseQueryParamsRequest(): QueryParamsRequest {
@@ -215,22 +221,22 @@ export const QueryGetBetResponse = {
   },
 };
 
-function createBaseQueryAllBetRequest(): QueryAllBetRequest {
+function createBaseQueryAllActiveBetRequest(): QueryAllActiveBetRequest {
   return { pagination: undefined };
 }
 
-export const QueryAllBetRequest = {
-  encode(message: QueryAllBetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const QueryAllActiveBetRequest = {
+  encode(message: QueryAllActiveBetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.pagination !== undefined) {
       PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllBetRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllActiveBetRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryAllBetRequest();
+    const message = createBaseQueryAllActiveBetRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -245,19 +251,19 @@ export const QueryAllBetRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryAllBetRequest {
+  fromJSON(object: any): QueryAllActiveBetRequest {
     return { pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined };
   },
 
-  toJSON(message: QueryAllBetRequest): unknown {
+  toJSON(message: QueryAllActiveBetRequest): unknown {
     const obj: any = {};
     message.pagination !== undefined
       && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryAllBetRequest>, I>>(object: I): QueryAllBetRequest {
-    const message = createBaseQueryAllBetRequest();
+  fromPartial<I extends Exact<DeepPartial<QueryAllActiveBetRequest>, I>>(object: I): QueryAllActiveBetRequest {
+    const message = createBaseQueryAllActiveBetRequest();
     message.pagination = (object.pagination !== undefined && object.pagination !== null)
       ? PageRequest.fromPartial(object.pagination)
       : undefined;
@@ -330,6 +336,67 @@ export const QueryAllBetResponse = {
   },
 };
 
+function createBaseQueryAllSettledBetRequest(): QueryAllSettledBetRequest {
+  return { pagination: undefined, lotteryId: 0 };
+}
+
+export const QueryAllSettledBetRequest = {
+  encode(message: QueryAllSettledBetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.lotteryId !== 0) {
+      writer.uint32(16).uint64(message.lotteryId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllSettledBetRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllSettledBetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.lotteryId = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllSettledBetRequest {
+    return {
+      pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined,
+      lotteryId: isSet(object.lotteryId) ? Number(object.lotteryId) : 0,
+    };
+  },
+
+  toJSON(message: QueryAllSettledBetRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    message.lotteryId !== undefined && (obj.lotteryId = Math.round(message.lotteryId));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllSettledBetRequest>, I>>(object: I): QueryAllSettledBetRequest {
+    const message = createBaseQueryAllSettledBetRequest();
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageRequest.fromPartial(object.pagination)
+      : undefined;
+    message.lotteryId = object.lotteryId ?? 0;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -337,7 +404,9 @@ export interface Query {
   /** Queries a active Bet by creator. */
   ActiveBet(request: QueryGetBetRequest): Promise<QueryGetBetResponse>;
   /** Queries a list of active Bet items. */
-  ActiveBetAll(request: QueryAllBetRequest): Promise<QueryAllBetResponse>;
+  ActiveBetAll(request: QueryAllActiveBetRequest): Promise<QueryAllBetResponse>;
+  /** Queries a list of settled Bet items of a lottery. */
+  SettledBetAll(request: QueryAllSettledBetRequest): Promise<QueryAllBetResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -347,6 +416,7 @@ export class QueryClientImpl implements Query {
     this.Params = this.Params.bind(this);
     this.ActiveBet = this.ActiveBet.bind(this);
     this.ActiveBetAll = this.ActiveBetAll.bind(this);
+    this.SettledBetAll = this.SettledBetAll.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -360,9 +430,15 @@ export class QueryClientImpl implements Query {
     return promise.then((data) => QueryGetBetResponse.decode(new _m0.Reader(data)));
   }
 
-  ActiveBetAll(request: QueryAllBetRequest): Promise<QueryAllBetResponse> {
-    const data = QueryAllBetRequest.encode(request).finish();
+  ActiveBetAll(request: QueryAllActiveBetRequest): Promise<QueryAllBetResponse> {
+    const data = QueryAllActiveBetRequest.encode(request).finish();
     const promise = this.rpc.request("vjdmhd.lottery.bet.Query", "ActiveBetAll", data);
+    return promise.then((data) => QueryAllBetResponse.decode(new _m0.Reader(data)));
+  }
+
+  SettledBetAll(request: QueryAllSettledBetRequest): Promise<QueryAllBetResponse> {
+    const data = QueryAllSettledBetRequest.encode(request).finish();
+    const promise = this.rpc.request("vjdmhd.lottery.bet.Query", "SettledBetAll", data);
     return promise.then((data) => QueryAllBetResponse.decode(new _m0.Reader(data)));
   }
 }
@@ -370,6 +446,25 @@ export class QueryClientImpl implements Query {
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 }
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
@@ -381,6 +476,18 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

@@ -10,13 +10,14 @@
  */
 
 export interface BetBet {
+  /** @format uint64 */
   id?: string;
+
+  /** @format uint64 */
   lottery_id?: string;
 
   /** @format int64 */
   height?: string;
-
-  /** @format uint64 */
   amount?: string;
   creator?: string;
 }
@@ -317,6 +318,33 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     this.request<BetQueryParamsResponse, RpcStatus>({
       path: `/vjdmhd/lottery/bet/params`,
       method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QuerySettledBetAll
+   * @summary Queries a list of settled Bet items of a lottery.
+   * @request GET:/vjdmhd/lottery/bet/settledbet/{lottery_id}
+   */
+  querySettledBetAll = (
+    lotteryId: string,
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<BetQueryAllBetResponse, RpcStatus>({
+      path: `/vjdmhd/lottery/bet/settledbet/${lotteryId}`,
+      method: "GET",
+      query: query,
       format: "json",
       ...params,
     });

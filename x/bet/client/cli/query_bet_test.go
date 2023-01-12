@@ -5,17 +5,19 @@ import (
 	"strconv"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/tendermint/crypto/secp256k1"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/vjdmhd/lottery/testutil/network"
 	"github.com/vjdmhd/lottery/testutil/nullify"
 	"github.com/vjdmhd/lottery/x/bet/client/cli"
 	"github.com/vjdmhd/lottery/x/bet/types"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // Prevent strconv unused error
@@ -28,9 +30,12 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet, 
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
+		prvKey := secp256k1.GenPrivKey()
+		creatorAddr := sdk.AccAddress(prvKey.PubKey().Address()).String()
 		bet := types.Bet{
-			Id:      strconv.Itoa(i),
-			Creator: "known",
+			Id:      uint64(i),
+			Creator: creatorAddr,
+			Amount:  sdkmath.NewInt(int64(i)),
 		}
 		nullify.Fill(&bet)
 		state.ActiveBetList = append(state.ActiveBetList, bet)
@@ -62,7 +67,7 @@ func TestShowBet(t *testing.T) {
 			creator: activeObjs[0].Creator,
 
 			args: common,
-			obj:  activeObjs[1],
+			obj:  activeObjs[0],
 		},
 		{
 			desc:    "not found",
@@ -154,9 +159,9 @@ func TestListBet(t *testing.T) {
 		var resp types.QueryAllBetResponse
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
-		require.Equal(t, 1, int(resp.Pagination.Total))
+		require.Equal(t, 5, int(resp.Pagination.Total))
 		require.ElementsMatch(t,
-			nullify.Fill([]types.Bet{activeObjs[4]}),
+			nullify.Fill(activeObjs),
 			nullify.Fill(resp.Bet),
 		)
 	})

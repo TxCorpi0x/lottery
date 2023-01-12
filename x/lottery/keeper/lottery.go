@@ -8,7 +8,7 @@ import (
 
 // SetLottery set a specific lottery in the store from its index
 func (k Keeper) SetLottery(ctx sdk.Context, lottery types.Lottery) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LotteryKeyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.LotteryKeyPrefix)
 	b := k.cdc.MustMarshal(&lottery)
 	store.Set(types.LotteryKey(
 		lottery.Id,
@@ -21,7 +21,7 @@ func (k Keeper) GetLottery(
 	id uint64,
 
 ) (val types.Lottery, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LotteryKeyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.LotteryKeyPrefix)
 
 	b := store.Get(types.LotteryKey(
 		id,
@@ -40,7 +40,7 @@ func (k Keeper) RemoveLottery(
 	id uint64,
 
 ) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LotteryKeyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.LotteryKeyPrefix)
 	store.Delete(types.LotteryKey(
 		id,
 	))
@@ -48,7 +48,7 @@ func (k Keeper) RemoveLottery(
 
 // GetAllLottery returns all lottery
 func (k Keeper) GetAllLottery(ctx sdk.Context) (list []types.Lottery) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LotteryKeyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.LotteryKeyPrefix)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
@@ -66,7 +66,7 @@ func (k Keeper) GetAllLottery(ctx sdk.Context) (list []types.Lottery) {
 // reversely sorted lottery kvstore returns the latest lottery
 // because we have used number as key, it is always sorted ascending
 func (k Keeper) GetCurrentLottery(ctx sdk.Context) (current types.Lottery) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LotteryKeyPrefix))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.LotteryKeyPrefix)
 	// to get the latest lottery item KVStoreReversePrefixIterator
 	// is being chosen to get latest item
 	iterator := sdk.KVStoreReversePrefixIterator(store, []byte{})
@@ -96,24 +96,26 @@ func (k Keeper) GetOrCreateCurrentLottery(ctx sdk.Context) (current types.Lotter
 	currentLottery := k.GetCurrentLottery(ctx)
 
 	// if the winner is determined ths means that the lottery has not finished
-	if currentLottery.WinnerId == types.UnknownWinnerID {
+	if currentLottery.Id != 0 && currentLottery.WinnerId == types.UnknownWinnerID {
 		return currentLottery
 	}
 
+	newLottery := types.NewLottery(ctx)
+
 	// sets new lottery
-	k.SetLottery(ctx, types.NewLottery(ctx))
+	k.SetLottery(ctx, newLottery)
 
 	// return the latest unfinished lottery
 	return k.GetCurrentLottery(ctx)
 }
 
-// FinishLottery set the lottery attributes
+// FinishLottery set the finished lottery attributes
 func (k Keeper) FinishLottery(
 	ctx sdk.Context,
 	lottery types.Lottery,
 	betCount uint64,
 	payout sdk.Coin,
-	winnerID string,
+	winnerID uint64,
 ) {
 	lottery.BetCount = betCount
 	lottery.EndBlock = ctx.BlockHeight()

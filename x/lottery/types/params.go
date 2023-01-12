@@ -2,8 +2,12 @@ package types
 
 import (
 	"fmt"
+	math "math"
 
+	sdkmath "cosmossdk.io/math"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"github.com/spf13/cast"
+	"github.com/vjdmhd/lottery/app/params"
 	"gopkg.in/yaml.v2"
 )
 
@@ -14,10 +18,10 @@ var (
 	KeyLotteryFee = []byte("LotteryFee")
 	KeyBetSize    = []byte("BetSize")
 
-	DefaultLotteryFee = uint64(5)
+	DefaultLotteryFee = sdkmath.NewInt(5 * cast.ToInt64(math.Pow(10, params.LOTExponent)))
 	DefaultBetSize    = BetSize{
-		MinBet: uint64(1),
-		MaxBet: uint64(100),
+		MinBet: sdkmath.NewInt(1 * cast.ToInt64(math.Pow(10, params.LOTExponent))),
+		MaxBet: sdkmath.NewInt(100 * cast.ToInt64(math.Pow(10, params.LOTExponent))),
 	}
 )
 
@@ -65,7 +69,7 @@ func (p Params) String() string {
 }
 
 func validateLotteryFee(i interface{}) error {
-	_, ok := i.(uint64)
+	_, ok := i.(sdkmath.Int)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
@@ -79,7 +83,7 @@ func validateBetSize(i interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if p.MinBet >= p.MaxBet {
+	if p.MinBet.GTE(p.MaxBet) {
 		return fmt.Errorf("minimum value should be less than maximum value")
 	}
 

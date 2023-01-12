@@ -13,10 +13,12 @@ import (
 
 type (
 	Keeper struct {
-		cdc        codec.BinaryCodec
-		storeKey   storetypes.StoreKey
-		memKey     storetypes.StoreKey
-		paramstore paramtypes.Subspace
+		cdc           codec.BinaryCodec
+		storeKey      storetypes.StoreKey
+		memKey        storetypes.StoreKey
+		paramstore    paramtypes.Subspace
+		lotteryKeeper types.LotteryKeeper
+		BankKeeper    types.BankKeeper
 	}
 )
 
@@ -25,7 +27,7 @@ func NewKeeper(
 	storeKey,
 	memKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
-
+	bankKeeper types.BankKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -33,12 +35,16 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-
 		cdc:        cdc,
 		storeKey:   storeKey,
 		memKey:     memKey,
 		paramstore: ps,
+		BankKeeper: bankKeeper,
 	}
+}
+
+func (k *Keeper) SetLotteryKeeper(lotteryKeeper types.LotteryKeeper) {
+	k.lotteryKeeper = lotteryKeeper
 }
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {

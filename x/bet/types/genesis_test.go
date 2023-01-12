@@ -24,25 +24,24 @@ func TestGenesisState_Validate(t *testing.T) {
 
 				ActiveBetList: []types.Bet{
 					{
-						Id:      "0",
+						Id:      0,
 						Creator: "creator1",
 					},
 					{
-						Id:      "1",
+						Id:      1,
 						Creator: "creator2",
 					},
 				},
 				SettledBetList: []types.Bet{
 					{
-						Id:      "0",
+						Id:      0,
 						Creator: "creator1",
 					},
 					{
-						Id:      "1",
+						Id:      1,
 						Creator: "creator2",
 					},
 				},
-				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
 		},
@@ -51,26 +50,25 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				ActiveBetList: []types.Bet{
 					{
-						Id:      "0",
+						Id:      0,
 						Creator: "creator1",
 					},
 					{
-						Id:      "1",
+						Id:      1,
 						Creator: "creator1",
 					},
 				},
 				SettledBetList: []types.Bet{
 					{
-						Id: "0",
+						Id: 0,
 					},
 					{
-						Id: "1",
+						Id: 1,
 					},
 				},
 			},
 			valid: false,
 		},
-		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()

@@ -10,12 +10,12 @@ export interface Lottery {
   startBlock: number;
   endBlock: number;
   betCount: number;
-  winnerId: string;
+  winnerId: number;
   payout: Coin | undefined;
 }
 
 function createBaseLottery(): Lottery {
-  return { id: 0, startBlock: 0, endBlock: 0, betCount: 0, winnerId: "", payout: undefined };
+  return { id: 0, startBlock: 0, endBlock: 0, betCount: 0, winnerId: 0, payout: undefined };
 }
 
 export const Lottery = {
@@ -32,8 +32,8 @@ export const Lottery = {
     if (message.betCount !== 0) {
       writer.uint32(32).uint64(message.betCount);
     }
-    if (message.winnerId !== "") {
-      writer.uint32(42).string(message.winnerId);
+    if (message.winnerId !== 0) {
+      writer.uint32(40).uint64(message.winnerId);
     }
     if (message.payout !== undefined) {
       Coin.encode(message.payout, writer.uint32(50).fork()).ldelim();
@@ -61,7 +61,7 @@ export const Lottery = {
           message.betCount = longToNumber(reader.uint64() as Long);
           break;
         case 5:
-          message.winnerId = reader.string();
+          message.winnerId = longToNumber(reader.uint64() as Long);
           break;
         case 6:
           message.payout = Coin.decode(reader, reader.uint32());
@@ -80,7 +80,7 @@ export const Lottery = {
       startBlock: isSet(object.startBlock) ? Number(object.startBlock) : 0,
       endBlock: isSet(object.endBlock) ? Number(object.endBlock) : 0,
       betCount: isSet(object.betCount) ? Number(object.betCount) : 0,
-      winnerId: isSet(object.winnerId) ? String(object.winnerId) : "",
+      winnerId: isSet(object.winnerId) ? Number(object.winnerId) : 0,
       payout: isSet(object.payout) ? Coin.fromJSON(object.payout) : undefined,
     };
   },
@@ -91,7 +91,7 @@ export const Lottery = {
     message.startBlock !== undefined && (obj.startBlock = Math.round(message.startBlock));
     message.endBlock !== undefined && (obj.endBlock = Math.round(message.endBlock));
     message.betCount !== undefined && (obj.betCount = Math.round(message.betCount));
-    message.winnerId !== undefined && (obj.winnerId = message.winnerId);
+    message.winnerId !== undefined && (obj.winnerId = Math.round(message.winnerId));
     message.payout !== undefined && (obj.payout = message.payout ? Coin.toJSON(message.payout) : undefined);
     return obj;
   },
@@ -102,7 +102,7 @@ export const Lottery = {
     message.startBlock = object.startBlock ?? 0;
     message.endBlock = object.endBlock ?? 0;
     message.betCount = object.betCount ?? 0;
-    message.winnerId = object.winnerId ?? "";
+    message.winnerId = object.winnerId ?? 0;
     message.payout = (object.payout !== undefined && object.payout !== null)
       ? Coin.fromPartial(object.payout)
       : undefined;

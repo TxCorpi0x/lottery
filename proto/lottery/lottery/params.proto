@@ -9,11 +9,22 @@ option go_package = "github.com/vjdmhd/lottery/x/lottery/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
   
-  uint64 lottery_fee = 1;
+  string lottery_fee = 1 [
+    (gogoproto.moretags)   = "yaml:\"lottery_fee\"",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false];
   BetSize bet_size = 2 [(gogoproto.moretags) = "yaml:\"bet_size\"", (gogoproto.nullable) = false];
 }
 
 message BetSize {
-  uint64 min_bet = 1;
-  uint64 max_bet = 2;
+
+  string min_bet = 1 [
+    (gogoproto.moretags)   = "yaml:\"min_bet\"",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false];
+
+  string max_bet = 2 [
+    (gogoproto.moretags)   = "yaml:\"max_bet\"",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false];
 }

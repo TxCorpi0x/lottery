@@ -22,7 +22,6 @@ func TestGenesis(t *testing.T) {
 				Id: 1,
 			},
 		},
-		// this line is used by starport scaffolding # genesis/test/state
 	}
 
 	k, ctx := keepertest.LotteryKeeper(t)
@@ -34,5 +33,4 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(got)
 
 	require.ElementsMatch(t, genesisState.LotteryList, got.LotteryList)
-	// this line is used by starport scaffolding # genesis/test/assert
 }

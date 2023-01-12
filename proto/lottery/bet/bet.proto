@@ -6,10 +6,13 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/vjdmhd/lottery/x/bet/types";
 
 message Bet {
-  string id = 1; 
-  string lottery_id = 2;  
+  uint64 id = 1; 
+  uint64 lottery_id = 2;  
   int64 height = 3; 
-  uint64 amount = 4; 
+  string amount = 4 [
+    (gogoproto.moretags)   = "yaml:\"amount\"",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false]; 
   string creator = 5;
 }
 
